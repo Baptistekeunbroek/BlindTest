@@ -1,0 +1,23 @@
+{
+  "name": "blindtest",
+  "version": "1.0.0",
+  "description": "Projet Transverse L3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Malo-LC/BlindTest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Malo-LC/BlindTest/issues"
+  },
+  "homepage": "https://github.com/Malo-LC/BlindTest#readme",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-router-dom": "^6.2.1"
+  }
+}
