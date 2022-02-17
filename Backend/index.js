@@ -4,6 +4,7 @@ const socketio = require('socket.io');
 const cors = require('cors');
 const { Server } = require("socket.io");
 
+const  {addUser, removeUser, getUser, getUsersInRoom} = require('./Users');
 
 const router = require('./router');
 
@@ -24,16 +25,16 @@ app.use(router);
 
 
 io.on('connect', (socket) => {
-    console.log('a user connected');
-
     socket.on('join', ({name,room}, callback) =>{
-        console.log(name, room);
+        const {error, user} = addUser({id:socket.id, name,room})
 
-        // if (error){
-        //     callback();
-        // }
+        if (error){
+            return callback(error);
+        }
 
-        
+        socket.emit('message', {user : 'Console', text: user.name + ' welcome to the room' + user.room})
+
+        socket.join(user.room);
     })
 
 
