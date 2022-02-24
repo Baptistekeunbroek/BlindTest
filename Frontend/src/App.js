@@ -7,7 +7,7 @@ import  {Chat}  from './components/Chat';
 function App() {
   return (
     <div className="App">
-      <h1>Test</h1>
+      <h1>Blindtest en ligne</h1>
       <Router>
         <Routes>
           <Route path="/" element={<Join />} />

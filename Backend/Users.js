@@ -1,7 +1,6 @@
 const users = [];
 
-function addUser(id, name, room) {
-
+function addUser({id, name, room}) {
     name = name.trim().toLowerCase();
     room = room.trim().toLowerCase();
 
@@ -17,7 +16,7 @@ function addUser(id, name, room) {
 
 
 function removeUser(id) {
-    const index = user.findIndex((user) => user.id === id)
+    const index = users.findIndex((user) => user.id === id)
     if (index !== -1) {
         return users.splice(index, 1)[0];
     }
