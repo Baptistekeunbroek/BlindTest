@@ -6,7 +6,7 @@ import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
 
-const ENDPOINT = 'localhost:5000';
+const ENDPOINT = 'https://blindtest-transverse.herokuapp.com/';
 
 let socket;
 
