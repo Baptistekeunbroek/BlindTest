@@ -1,8 +1,12 @@
 
 import './App.css';
-import { BrowserRouter as Router, Route ,Routes} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Join } from './components/Join';
-import  {Chat}  from './components/Chat';
+import { Chat } from './components/Chat';
+
+// Render a YouTube video player
+
+
 
 function App() {
   return (

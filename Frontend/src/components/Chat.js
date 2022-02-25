@@ -5,8 +5,9 @@ import io from "socket.io-client";
 import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
+import { Music } from "./Music";
 
-const ENDPOINT = 'https://blindtest-transverse.herokuapp.com/';
+const ENDPOINT = 'localhost:5000'; //https://blindtest-transverse.herokuapp.com/
 
 let socket;
 
@@ -55,6 +56,7 @@ export function Chat() {
     }
 
     console.log(message,messages);
+    //<Music YTurl={'https://www.youtube.com/watch?v=XmE5qkNDPIE'} />
 
     return (
         <div className="chatBox">
@@ -66,4 +68,3 @@ export function Chat() {
         </div>
     );
 }
-
