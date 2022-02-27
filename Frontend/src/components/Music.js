@@ -2,13 +2,27 @@ import React from "react";
 import ReactPlayer from 'react-player/youtube'
 
 
-export function Music({ YTurl}) {
+export function Music({ YTurl }) {
+
+  if (YTurl === '') {
     return (
-        <ReactPlayer
+      <div>
+
+      </div>
+    )
+  }
+  else {
+    console.log(YTurl)
+    return (
+      <ReactPlayer
         url={YTurl}
-        playing='true'
+        playing={true}
         width="0px"
-        volume='0.2'
+        height="0px"
+        volume={0.2}
+        onReady={console.log('mtn')}
       />
     )
+  }
+
 }

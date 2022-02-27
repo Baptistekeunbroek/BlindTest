@@ -3,7 +3,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const cors = require('cors');
 const { Server } = require("socket.io");
-
+const axios = require('axios')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./Users');
 
 const router = require('./router');
@@ -54,13 +54,34 @@ io.on('connect', (socket) => {
 
     });
 
+    socket.on('putUrl',async () =>{
+        const user = getUser(socket.id);
+
+        async function getYoutubePlaylist(){
+            let data = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key=AIzaSyCx1vL1ucT50DMoH79E_Bk5mN7PCfj71OM')
+            console.log(data)
+            data = data.data.items;
+            
+
+
+            return data
+        }
+        const youtube = await getYoutubePlaylist();
+        console.log(youtube)
+        //const youtube = 'https://www.youtube.com/watch?v=XmE5qkNDPIE';
+
+        io.to(user.room).emit('setUrl', youtube);
+
+        //callback();
+
+    })
+
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit('message', { user: "console", text: user.name + " has left" })
         }
         console.log('user disconnected');
-
     });
 });
 
