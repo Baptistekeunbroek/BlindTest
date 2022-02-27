@@ -5,7 +5,7 @@ const cors = require('cors');
 const { Server } = require("socket.io");
 const axios = require('axios')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./Users');
-
+const config = require('./config')
 const router = require('./router');
 
 const app = express()
@@ -58,12 +58,9 @@ io.on('connect', (socket) => {
         const user = getUser(socket.id);
 
         async function getYoutubePlaylist(){
-            let data = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key=AIzaSyCx1vL1ucT50DMoH79E_Bk5mN7PCfj71OM')
+            let data = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key=' + config.key)
             console.log(data)
             data = data.data.items;
-            
-
-
             return data
         }
         const youtube = await getYoutubePlaylist();
