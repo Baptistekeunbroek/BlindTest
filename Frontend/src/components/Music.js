@@ -14,14 +14,17 @@ export function Music({ YTurl }) {
   else {
     console.log(YTurl)
     return (
-      <ReactPlayer
-        url={YTurl}
-        playing={true}
-        width="0px"
-        height="0px"
-        volume={0.2}
-        onReady={console.log('mtn')}
-      />
+      <div>
+        <h1>Titre : {YTurl.title}</h1>
+        <ReactPlayer
+          url={'https://www.youtube.com/watch?v=' + YTurl.URL}
+          playing={true}
+          width="100px"
+          height="100px"
+          volume={0.2}
+          onReady={console.log('mtn')}
+        />
+      </div>
     )
   }
 

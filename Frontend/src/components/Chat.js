@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
+import './Chat.css'
 
-
+import { BarreReponse } from "./BarreReponse";
 import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
 import { Music } from "./Music";
 
-const ENDPOINT = 'https://blindtest-transverse.herokuapp.com/' //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
+const ENDPOINT = 'localhost:5000' //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
 
 let socket;
 
@@ -39,7 +40,7 @@ export function Chat() {
 
             socket.off();
         }
-    }, [ENDPOINT, window.location.search])
+    }, [])
 
 
     useEffect(() => {
@@ -77,14 +78,20 @@ export function Chat() {
     console.log(message, messages, YTURL);
 
     return (
-        <div className="chatBox">
-            <h1>Chat</h1>
-            <Music YTurl={YTURL} />
-            <InfoBar room={room} />
-            <Messages messages={messages} name={name} />
-            <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-            <button onClick={mettreUrl}>Mettre une url</button>
-            <button onClick={enleverUrl}>enlever une url</button>
+        <div className="chatPlusJeu">
+            <div className="jeu">
+
+                <BarreReponse YTurl={YTURL} />
+                <Music YTurl={YTURL} />
+            </div>
+            <div className="chatBox">
+                <h1>Chat</h1>
+                <InfoBar room={room} />
+                <Messages messages={messages} name={name} />
+                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                <button onClick={mettreUrl}>Mettre une url</button>
+                <button onClick={enleverUrl}>enlever une url</button>
+            </div>
         </div>
     );
 }

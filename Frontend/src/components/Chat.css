@@ -1,0 +1,45 @@
+/*Tout le Chat+le Jeu component-------------------------------------------------*/
+
+.chatPlusJeu{
+    display: flex;
+    flex-direction: row;
+}
+
+
+
+
+
+/*Tout le Chat component-------------------------------------------------*/
+
+.chatBox{
+    width: 20%;
+    position: absolute;
+right: 10px;
+}
+
+/*InfoBar component-------------------------------------------------*/
+
+
+.infobar{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.containerGauche{
+    display: flex;
+    align-items: center;
+}
+
+.OnlineIcon{
+    height: 10px;
+    width: 10px;
+}
+
+.closeIcon{
+    height: 10px;
+    width: 10px;
+    background-color: black;
+}

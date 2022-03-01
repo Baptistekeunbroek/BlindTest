@@ -11,7 +11,7 @@ export function InfoBar({ room }) {
             <h3>{room}</h3>
         </div>
         <div className="containerDroit">
-            <a href="/"><img src={closeIcon} alt="close" /></a>
+            <a href="/"><img className="closeIcon" src={closeIcon} alt="close" /></a>
         </div>
     </div>
     )
