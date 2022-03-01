@@ -15,7 +15,7 @@ export function Music({ YTurl }) {
     console.log(YTurl)
     return (
       <ReactPlayer
-        url={YTurl}
+        url={'https://www.youtube.com/watch?v=_S7WEVLbQ-Y&t=617s'}
         playing={true}
         width="0px"
         height="0px"

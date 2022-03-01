@@ -8,7 +8,7 @@ import { Input } from "./Input";
 import { Messages } from "./Messages";
 import { Music } from "./Music";
 
-const ENDPOINT = 'https://blindtest-transverse.herokuapp.com/' //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
+const ENDPOINT = 'localhost:5000/' //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
 
 let socket;
 
