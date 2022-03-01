@@ -23,6 +23,12 @@ app.use(router);
 
 //------------------------------------------------------------------------------------------------------------------------
 
+function between(min, max) {
+    return Math.floor(
+        Math.random() * (max - min) + min
+    )
+}
+
 
 io.on('connect', (socket) => {
     socket.on('join', ({ name, room }, callback) => {
@@ -32,9 +38,9 @@ io.on('connect', (socket) => {
             return callback(error);
         }
 
-        socket.emit('message', { user: 'Console', text: user.name + ' welcome to the room ' + user.room })
+        socket.emit('message', { user: 'Console', text: user.name + ' bienvenue dans le salon  ' + user.room })
 
-        socket.broadcast.to(user.room).emit('message', { user: 'Console', text: user.name + 'has joined !!' })
+        socket.broadcast.to(user.room).emit('message', { user: 'Console', text: user.name + 's' + "'"  + 'est connecté !!' })
 
         socket.join(user.room);
 
@@ -48,35 +54,38 @@ io.on('connect', (socket) => {
         const user = getUser(socket.id);
 
         io.to(user.room).emit('message', { user: user.name, text: message });
-        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room)});
+        io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
 
         callback();
 
     });
 
-    socket.on('putUrl',async () =>{
+    socket.on('putUrl', async () => {
         const user = getUser(socket.id);
 
-        async function getYoutubePlaylist(){
+        async function getYoutubePlaylist() {
             let data = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key=' + config.key)
-            console.log(data)
+            //console.log(data)
             data = data.data.items;
             return data
         }
         const youtube = await getYoutubePlaylist();
-        console.log(youtube)
-        //const youtube = 'https://www.youtube.com/watch?v=XmE5qkNDPIE';
+        //console.log(youtube)
 
-        io.to(user.room).emit('setUrl', youtube);
+        const taille = youtube.length;
+        const randIndex = between(0, taille);
 
-        //callback();
+
+
+        io.to(user.room).emit('setUrl', { URL: youtube[randIndex].snippet.resourceId.videoId, title: youtube[randIndex].snippet.title });
+
 
     })
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id);
         if (user) {
-            io.to(user.room).emit('message', { user: "console", text: user.name + " has left" })
+            io.to(user.room).emit('message', { user: "console", text: user.name + " est parti" })
         }
         console.log('user disconnected');
     });
