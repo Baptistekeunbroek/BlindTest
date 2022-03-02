@@ -1,4 +1,4 @@
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import { stringSimilarity } from "string-similarity-js";
 
 
@@ -31,7 +31,7 @@ export function BarreReponse({ YTurl }) {
                     className="inputJeu"
                     placeholder="Tenter une réponse..."
                     type="text"
-                    value={message}
+                    
                     onKeyPress={(e) => clickPress(e)}
                     onChange={(event => setReponse(event.target.value))}
 
@@ -43,4 +43,3 @@ export function BarreReponse({ YTurl }) {
     }
 
 }
-*/
