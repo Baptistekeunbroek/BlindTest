@@ -11,6 +11,12 @@ import { Chat } from './components/Chat';
 function Home() {
   return (
     <div>
+      <h1 className ="Presentation">Blind-Test</h1> 
+    <p className="Presentation2">Blind-Test est un site de quiz musicaux qui se veut simple d'utilisation et entièrement gratuit.
+
+Vous n'avez pas besoin de vous inscrire pour lancer une partie.
+
+Les inscriptions permettent de choisir un pseudonyme, de créer des playlists privées et d'apparaître dans le classement.</p>
      
     </div>
   );
@@ -45,6 +51,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
         </Routes>
       </Router>
+      
     </div>
   );
 }

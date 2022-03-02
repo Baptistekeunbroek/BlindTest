@@ -1,5 +1,5 @@
 import React from "react";
-
+import './Message.css';
 
 import ReactEmoji from 'react-emoji'
 
@@ -15,17 +15,17 @@ export function Message({ message: { user, text }, name }) {
             ? (
                 <div className="messageContainer justifyEnd">
                     <p className="sentText">{trimmedName}</p>
-                    <div className="messageBox">
-                        <p className="messageText">{ReactEmoji.emojify(text)}</p>
+                    <div className="messageBox backgroundBlue">
+                        <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
                     </div>
                 </div>
             )
             : (
                 <div className="messageContainer justifyStart">
-                    <div className="messageBox">
-                        <p className="messageText">{ReactEmoji.emojify(text)}</p>
+                    <div className="messageBox backgroundLight">
+                        <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
                     </div>
-                    <p className="sentText">{user}</p>
+                    <p className="sentText pl-10">{user}</p>
                 </div>
             )
     )

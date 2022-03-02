@@ -79,20 +79,30 @@ export function Chat() {
     console.log(message, messages, YTURL);
 
     return (
-        <div className="chatPlusJeu">
-            <div className="jeu">
-
+        
+            <div className="outerContainer">
                 <BarreReponse YTurl={YTURL} />
                 <Music YTurl={YTURL} />
-            </div>
-            <div className="chatBox">
-                <h1>Chat</h1>
-                <InfoBar room={room} />
-                <Messages messages={messages} name={name} />
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-                <button onClick={mettreUrl}>Mettre une url</button>
+                <div className="container">
+                
+                    <h1>Chat</h1>
+                    <InfoBar room={room} />
+                    <Messages messages={messages} name={name} />
+                    <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                    <button onClick={mettreUrl}>Mettre une url</button>
                 <button onClick={enleverUrl}>enlever une url</button>
+
+                </div>
             </div>
-        </div>
+        
     );
 }
+/*
+                
+                <div className="chatPlusJeu">
+            <div className="jeu">
+
+                
+            </div>
+            </div>
+                */
