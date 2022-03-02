@@ -4,6 +4,10 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  
+}
+
+body{
   background-color: #24252A;
 }
 
@@ -60,4 +64,15 @@ button:hover{
 
 .JoinForm{
   text-align: center;
+}
+
+.Presentation{
+  text-align: center;
+  color:rgba(0,136,169,1);
+
+}
+
+.Presentation2{
+  text-align: center;
+  color:rgba(0,136,169,1);
 }
