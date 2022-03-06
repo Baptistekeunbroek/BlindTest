@@ -40,7 +40,7 @@ io.on('connect', (socket) => {
 
         socket.emit('message', { user: 'Console', text: user.name + ' bienvenue dans le salon  ' + user.room })
 
-        socket.broadcast.to(user.room).emit('message', { user: 'Console', text: user.name + 's' + "'"  + 'est connecté !!' })
+        socket.broadcast.to(user.room).emit('message', { user: 'Console', text: user.name + 's' + "'" + 'est connecté !!' })
 
         socket.join(user.room);
 
@@ -60,11 +60,21 @@ io.on('connect', (socket) => {
 
     });
 
+    socket.on('similaire90', () => {
+        const user = getUser(socket.id);
+        console.log("Similaire de fou");
+        io.to(user.room).emit('bonneReponse', {user : user})
+    })
+
+
+
+
     socket.on('putUrl', async () => {
         const user = getUser(socket.id);
 
         async function getYoutubePlaylist() {
-            let data = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key=' + config.key)
+            let data = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key='
+                + config.key)
             //console.log(data)
             data = data.data.items;
             return data

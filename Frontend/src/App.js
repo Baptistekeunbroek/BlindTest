@@ -33,9 +33,9 @@ function NavigationBar(){
           <li><Link to={'/'}>Playlist</Link></li>
         </ul>
         </nav>
-        <a className="contact" href="#"> <button>Contact</button></a>
+        <a className="contact" > <button>Contact</button></a>
       </header>
-  )
+  ) 
 }
 
 

@@ -19,13 +19,12 @@ export function Music({ YTurl }) {
         <ReactPlayer
           url={'https://www.youtube.com/watch?v=' + YTurl.URL}
           playing={true}
-          width="100px"
-          height="100px"
+          width="200px"
+          height="200px"
           volume={0.2}
           onReady={console.log('mtn')}
         />
       </div>
     )
   }
-
 }
