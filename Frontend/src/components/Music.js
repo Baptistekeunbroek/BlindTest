@@ -18,7 +18,6 @@ function pret(){
     )
   }
   else {
-    console.log(YTurl)
     return (
       <div className="Music">
         <h1>Titre : {YTurl.title}</h1>

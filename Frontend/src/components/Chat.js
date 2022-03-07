@@ -58,20 +58,32 @@ export function Chat() {
         socket.on("roomData", ({ users }) => {
             setUsers(users);
         });
+
+
+
+        socket.on('estParti', ({ user }) => {
+            console.log('left')
+            setusersVrai(usersVrai.filter(item => item.name !== user.name))
+        });
+    }, [messages, usersVrai])
+
+    useEffect(() => {
+
         socket.on('bonneReponse', ({ user }) => {
-
-            setusersVrai(usersVrai => [...usersVrai, user.name])
+            setusersVrai(usersVrai => [...usersVrai, user])
         })
+    }, [])
 
+    useEffect(() => {
         socket.on('setUrl', (URL) => {
             setYTURL(URL)
         })
+    })
 
-        socket.on('estParti', ({user}) =>{
-            setusersVrai(usersVrai.filter(item => item.name !==user.name))
-        });
-    }, [messages,usersVrai])
 
+    function uniqueVrai(){
+        return [...new Set(usersVrai)]
+    }
 
     function sendMessage(event) {
         event.preventDefault();
@@ -90,8 +102,7 @@ export function Chat() {
     function enleverUrl() {
         setYTURL('')
     }
-
-    console.log(usersVrai);
+    console.log(usersVrai)
     if (!socket) {
         return (
             <div>
@@ -104,10 +115,11 @@ export function Chat() {
 
             <div className="outerContainer">
                 <div className="JeuHomePage">
-                    <div>Bonne réponse de : {usersVrai.map((name) => (
-                        <p key={name} className="activeItem">
-                            {name}
-                        </p>))}
+                    <div>Bonne réponse de : {
+                        uniqueVrai().map((name) => (
+                            <p key={name} className="activeItem">
+                                {name}
+                            </p>))}
                     </div>
                     <TextContainer users={users} />
                     <BarreReponse YTurl={YTURL} socket={socket} />

@@ -63,7 +63,7 @@ io.on('connect', (socket) => {
     socket.on('similaire90', () => {
         const user = getUser(socket.id);
         console.log("Similaire de fou");
-        io.to(user.room).emit('bonneReponse', {user : user})
+        io.to(user.room).emit('bonneReponse', {user : user.name})
     })
 
     socket.on('pretLancer', () => {
