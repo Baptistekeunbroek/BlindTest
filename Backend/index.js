@@ -101,6 +101,7 @@ io.on('connect', (socket) => {
         const user = removeUser(socket.id);
         if (user) {
             io.to(user.room).emit('message', { user: "console", text: user.name + " est parti" })
+            io.to(user.room).emit('estParti',{user})
         }
         console.log('user disconnected');
     });
