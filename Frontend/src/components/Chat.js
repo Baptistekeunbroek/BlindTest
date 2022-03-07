@@ -123,7 +123,8 @@ export function Chat() {
                 <Messages messages={messages} name={name} />
                 <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
 
-
+                <button onClick={mettreUrl}>Mettre une url</button>
+            <button onClick={enleverUrl}>enlever une url</button>
             </div>
 
 
