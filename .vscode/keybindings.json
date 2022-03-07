@@ -1,0 +1,5 @@
+{
+    "key": "ctrl+j",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Build All"
+}

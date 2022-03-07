@@ -1,0 +1,33 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "Backend/",
+			"problemMatcher": [],
+			"label": "npm: start - Backend",
+			"detail": "nodemon index.js",
+			"group": "build"
+		},
+		{
+			"type": "npm",
+			"script": "start",
+			"path": "Frontend/",
+			"problemMatcher": [],
+			"label": "npm: start - Frontend",
+			"detail": "react-scripts start",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build All",
+			"dependsOn": [
+				"npm: start - Backend",
+				"npm: start - Frontend"
+			]
+		}
+	]
+}
