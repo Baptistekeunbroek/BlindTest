@@ -14,11 +14,13 @@ html, body {
   
   .joinOuterContainer {
     display: flex;
+    
     justify-content: center;
     text-align: center;
-    height: 100vh;
+    height: 50vh;
     align-items: center;
     background-color: #4b4b52;
+
   }
   
   .joinInnerContainer {
