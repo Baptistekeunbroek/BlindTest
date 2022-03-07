@@ -1,8 +1,8 @@
 .TextContainer{
-        position: relative;
-        bottom: 200px;
-        right: 500px;
-        width: 250px;
-        border: 2px solid #2979FF;
-        text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #2979FF;
+    text-align: center;
 }

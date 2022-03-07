@@ -10,7 +10,7 @@ export function TextContainer({ users }) {
       {
         users
           ? (
-            <div className="TextContainer">
+            <div>
               <h1>Personnes connectées:</h1>
               <div className="activeContainer">
                 <h2>
