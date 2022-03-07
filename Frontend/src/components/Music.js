@@ -1,6 +1,6 @@
 import React from "react";
 import ReactPlayer from 'react-player/youtube'
-
+import './Music.css'
 
 export function Music({ YTurl, socket }) {
 

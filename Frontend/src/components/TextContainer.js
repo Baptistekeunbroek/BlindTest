@@ -1,12 +1,12 @@
 import React from 'react';
-
+import './TextContainer.css'
 
 
 
 
 export function TextContainer({ users }) {
   return (
-    <div className="textContainer">
+    <div className="TextContainer">
       {
         users
           ? (
