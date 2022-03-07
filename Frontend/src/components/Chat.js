@@ -58,20 +58,20 @@ export function Chat() {
         socket.on("roomData", ({ users }) => {
             setUsers(users);
         });
-    }, [messages])
-
-    useEffect(() => {
         socket.on('bonneReponse', ({ user }) => {
 
             setusersVrai(usersVrai => [...usersVrai, user.name])
         })
-    }, [])
 
-    useEffect(() => {
         socket.on('setUrl', (URL) => {
             setYTURL(URL)
         })
-    }, [])
+
+        socket.on('estParti', ({user}) =>{
+            setusersVrai(usersVrai.filter(item => item.name !==user.name))
+        });
+    }, [messages,usersVrai])
+
 
     function sendMessage(event) {
         event.preventDefault();
@@ -82,9 +82,6 @@ export function Chat() {
         }
     }
 
-
-
-
     function mettreUrl() {
         socket.emit('putUrl')
 
@@ -94,7 +91,7 @@ export function Chat() {
         setYTURL('')
     }
 
-    console.log(message, messages, YTURL, usersVrai);
+    console.log(usersVrai);
     if (!socket) {
         return (
             <div>
