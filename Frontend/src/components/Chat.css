@@ -6,6 +6,12 @@
     background-color: #4b4b52;
   }
   
+  .JeuHomePage{
+    height: 100%;
+    width: 75%;
+    
+  }
+  
   .container {
     display: flex;
     position: absolute;
