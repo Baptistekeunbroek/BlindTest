@@ -82,7 +82,7 @@ export function Chat() {
         }
     }
 
-   
+
 
 
     function mettreUrl() {
@@ -95,8 +95,8 @@ export function Chat() {
     }
 
     console.log(message, messages, YTURL, usersVrai);
-    if(!socket){
-        return(
+    if (!socket) {
+        return (
             <div>
                 Chargement...
             </div>
@@ -105,29 +105,30 @@ export function Chat() {
     else {
         return (
 
-        <div className="outerContainer">
-            <div>Bonne réponse de : {usersVrai.map((name) => (
-                <p key={name} className="activeItem">
-                    {name}
-                </p>))}
+            <div className="outerContainer">
+                <div className="JeuHomePage">
+                    <div>Bonne réponse de : {usersVrai.map((name) => (
+                        <p key={name} className="activeItem">
+                            {name}
+                        </p>))}
+                    </div>
+                    <TextContainer users={users} />
+                    <BarreReponse YTurl={YTURL} socket={socket} />
+                    <Music YTurl={YTURL} socket={socket} />
+                </div>
+                <div className="container">
+
+                    <h1>Chat</h1>
+                    <InfoBar room={room} />
+                    <Messages messages={messages} name={name} />
+                    <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+
+                    <button onClick={mettreUrl}>Mettre une url</button>
+                    <button onClick={enleverUrl}>enlever une url</button>
+                </div>
+
+
             </div>
-            <button onClick={mettreUrl}>Mettre une url</button>
-            <button onClick={enleverUrl}>enlever une url</button>
-            <TextContainer  users={users} />
-            <BarreReponse YTurl={YTURL} socket={socket} />
-            <Music YTurl={YTURL} socket={socket} />
-            <div className="container">
-
-                <h1>Chat</h1>
-                <InfoBar room={room} />
-                <Messages messages={messages} name={name} />
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-
-                <button onClick={mettreUrl}>Mettre une url</button>
-            <button onClick={enleverUrl}>enlever une url</button>
-            </div>
-
-
-        </div>
-    );}
+        );
+    }
 }
