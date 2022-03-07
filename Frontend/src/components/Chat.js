@@ -117,8 +117,6 @@ export function Chat() {
                     <Music YTurl={YTURL} socket={socket} />
                 </div>
                 <div className="container">
-
-                    <h1>Chat</h1>
                     <InfoBar room={room} />
                     <Messages messages={messages} name={name} />
                     <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
