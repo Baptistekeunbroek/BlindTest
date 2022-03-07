@@ -23,7 +23,7 @@ export function Chat() {
     const [messages, setMessages] = useState([]);
     const [YTURL, setYTURL] = useState('');
     const [users, setUsers] = useState('');
-    const [usersVrai, setusersVrai] = useState('');
+    const [usersVrai, setusersVrai] = useState([]);
 
 
 
@@ -61,6 +61,13 @@ export function Chat() {
     }, [messages])
 
     useEffect(() => {
+        socket.on('bonneReponse', ({ user }) => {
+
+            setusersVrai(usersVrai => [...usersVrai, user.name])
+        })
+    }, [])
+
+    useEffect(() => {
         socket.on('setUrl', (URL) => {
             setYTURL(URL)
         })
@@ -75,12 +82,7 @@ export function Chat() {
         }
     }
 
-    useEffect(() => {
-        socket.on('bonneReponse', ({user}) => {
-            
-            setusersVrai(user.name)
-        })
-    }, [])
+   
 
 
     function mettreUrl() {
@@ -92,17 +94,28 @@ export function Chat() {
         setYTURL('')
     }
 
-    console.log(message, messages, YTURL);
-
-    return (
+    console.log(message, messages, YTURL, usersVrai);
+    if(!socket){
+        return(
+            <div>
+                Chargement...
+            </div>
+        )
+    }
+    else {
+        return (
 
         <div className="outerContainer">
-            <p>Bonne réponse de : {usersVrai}</p>
+            <div>Bonne réponse de : {usersVrai.map((name) => (
+                <p key={name} className="activeItem">
+                    {name}
+                </p>))}
+            </div>
             <button onClick={mettreUrl}>Mettre une url</button>
             <button onClick={enleverUrl}>enlever une url</button>
-            <TextContainer users={users} />
+            <TextContainer  users={users} />
             <BarreReponse YTurl={YTURL} socket={socket} />
-            <Music YTurl={YTURL} />
+            <Music YTurl={YTURL} socket={socket} />
             <div className="container">
 
                 <h1>Chat</h1>
@@ -112,8 +125,8 @@ export function Chat() {
 
 
             </div>
-            
+
 
         </div>
-    );
+    );}
 }

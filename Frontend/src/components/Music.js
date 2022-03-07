@@ -2,7 +2,12 @@ import React from "react";
 import ReactPlayer from 'react-player/youtube'
 
 
-export function Music({ YTurl }) {
+export function Music({ YTurl, socket }) {
+
+function pret(){
+  console.log('pret')
+  socket.emit('pretLancer');
+}
 
   if (YTurl === '') {
     return (
@@ -22,7 +27,7 @@ export function Music({ YTurl }) {
           width="200px"
           height="200px"
           volume={0.2}
-          onReady={console.log('mtn')}
+          onReady={pret}
         />
       </div>
     )

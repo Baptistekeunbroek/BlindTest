@@ -19,7 +19,7 @@
     width: 25%;
   }
   
-  @media (min-width: 320px) and (max-width: 480px) {
+  /* @media (min-width: 320px) and (max-width: 480px) {
     .outerContainer {
       height: 100%;
     }
@@ -34,7 +34,7 @@
     .container {
       width: 60%;
     }
-  }
+  } */
 
   
 h1{

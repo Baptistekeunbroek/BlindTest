@@ -47,6 +47,14 @@ export function BarreReponse({ YTurl , socket}) {
         setTimer(30)
     }
 
+    useEffect(() => {
+        socket.on('timer30', () => {
+            console.log('Mis a 30')
+            setTimer(30)
+        })
+    },[socket])
+    
+
 
     if (YTurl === '') {
         return (<div></div>)

@@ -66,6 +66,11 @@ io.on('connect', (socket) => {
         io.to(user.room).emit('bonneReponse', {user : user})
     })
 
+    socket.on('pretLancer', () => {
+        console.log("Pret de fou");
+        io.to(socket.id).emit('timer30')
+    })
+
 
 
 
