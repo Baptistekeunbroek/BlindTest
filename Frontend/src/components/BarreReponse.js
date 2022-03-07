@@ -15,12 +15,7 @@ export function BarreReponse({ YTurl , socket}) {
         return stringSimilarity(reponseAttendue, reponse);
     }
 
-    function clickPress() {
-        console.log(similarite)
-        
-        setSimilarite(testSimilarite())
-        
-    }
+    
 
     function enterPress(event) {
         console.log(similarite)
@@ -33,6 +28,7 @@ export function BarreReponse({ YTurl , socket}) {
     
     useEffect(() => {
         if(similarite >= 0.90){
+            console.log('emit')
             socket.emit('similaire90');
         }
     },[similarite])
@@ -67,11 +63,11 @@ export function BarreReponse({ YTurl , socket}) {
                     className="inputJeu"
                     placeholder="Tenter une réponse..."
                     type="text"
-                    onKeyPress={(e) => clickPress(e)}
+                    onKeyPress={(e) => enterPress(e)}
                     onChange={(event => setReponse(event.target.value))}
 
                 />
-                <button className="sendButtonJeu" onClick={(event) => { enterPress(event); clickPress();}}>Essayer</button>
+                
                 <p>Similarité : {similarite}</p>
                 <p>Time : {timer}</p>
 
