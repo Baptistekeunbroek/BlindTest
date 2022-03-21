@@ -1,29 +1,28 @@
 .outerContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80vh;
-    background-color: #4b4b52;
-    align-items: flex-start;
-  }
-  
-  .JeuHomePage{
-    height: 100%;
-    width: 75%;
-    
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: #4b4b52;
+  align-items: flex-start;
+}
 
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #24252A;
-    border-radius: 8px;
-    height: 90%;
-    width: 25%;
-  }
-  
-  /* @media (min-width: 320px) and (max-width: 480px) {
+.JeuHomePage {
+  height: 100%;
+  width: 75%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #24252a;
+  border-radius: 8px;
+  height: 100%;
+  width: 25%;
+}
+
+/* @media (min-width: 320px) and (max-width: 480px) {
     .outerContainer {
       height: 100%;
     }
@@ -40,7 +39,6 @@
     }
   } */
 
-  
-h1{
-    color:white;
+h1 {
+  color: white;
 }
