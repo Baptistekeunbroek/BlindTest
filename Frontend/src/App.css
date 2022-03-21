@@ -1,21 +1,21 @@
-@import url('https:fonts.googleapis.com/css?family=Montserrat:500');
+@import url("https:fonts.googleapis.com/css?family=Montserrat:500");
 
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  
 }
 
-
-body{
+body {
   background-color: #4b4b52;
-  margin:0;
-   padding:0;
-   height:100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
-li, a, button{
+li,
+a,
+button {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -23,25 +23,25 @@ li, a, button{
   text-decoration: none;
 }
 
-.nav_bar{
+.nav_bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 30px 10%;
-  background-color: #24252A;
+  background-color: #24252a;
 }
 
-.logo{
+.logo {
   cursor: pointer;
   width: 4em;
   height: 4em;
 }
 
-.liens_nav{
+.liens_nav {
   list-style: none;
 }
 
-.liens_nav li{
+.liens_nav li {
   display: inline-block;
   padding: 0px 20px;
 }
@@ -50,59 +50,54 @@ li, a, button{
   transition: all 0.3s ease 0s;
 }
 
-.liens_nav li a:hover{
+.liens_nav li a:hover {
   color: #0088a9;
 }
 
-button{
-  padding:9px 25px;
-  background-color: rgba(0,136,169,1);
+button {
+  padding: 9px 25px;
+  background-color: rgba(0, 136, 169, 1);
   border: none;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease 0s;
 }
 
-button:hover{
-  background-color: rgba(0,136,169,0.8);
+button:hover {
+  background-color: rgba(0, 136, 169, 0.8);
 }
 
-.JoinForm{
+.JoinForm {
   text-align: center;
 }
 
-.Presentation{
+.Presentation {
   text-align: center;
-  color:rgba(0,136,169,1);
+  color: rgba(0, 136, 169, 1);
   display: flex;
   flex-direction: column;
   flex-grow: 3;
-
 }
 
-.Presentation2{
+.Presentation2 {
   text-align: center;
-  color:rgba(0,136,169,1);
+  color: rgba(0, 136, 169, 1);
 }
 
-
-
-.footer{
-position: fixed;
-background:#24252A;
-bottom: 0;
-left: 0;
-right: 0;
-height:50px;
-justify-content: center;
-
-
+.footer {
+  position: fixed;
+  background: #24252a;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  justify-content: center;
 }
 
-.footer_text{
-  color:white;
+.footer_text {
+  color: white;
 }
 
-.body_footer{
+.body_footer {
   position: relative;
 }

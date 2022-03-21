@@ -22,8 +22,8 @@ export function Chat() {
   const [messages, setMessages] = useState([]);
   const [YTURL, setYTURL] = useState("");
   const [users, setUsers] = useState("");
-  const [usersVrai, setusersVrai] = useState([]);
-
+  const [usersBonneRep, setusersVrai] = useState([]);
+  //Arrivée d'un nouveau joueur ------------------------------------
   useEffect(() => {
     const { name, room } = queryString.parse(window.location.search);
 
@@ -42,6 +42,7 @@ export function Chat() {
       socket.off();
     };
   }, []);
+  //Listes des messages ------------------------------------
 
   useEffect(() => {
     socket.on("message", (message) => {
@@ -51,27 +52,44 @@ export function Chat() {
     socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
+  }, [messages]);
 
-    socket.on("estParti", ({ user }) => {
-      console.log("left");
-      setusersVrai(usersVrai.filter((item) => item.name !== user.name));
-    });
-  }, [messages, usersVrai]);
+  //Detection des bonnes reponses ------------------------------------
 
   useEffect(() => {
     socket.on("bonneReponse", ({ user }) => {
-      setusersVrai((usersVrai) => [...usersVrai, user]);
+      setusersVrai((usersBonneRep) => [...usersBonneRep, user]);
     });
   }, []);
+
+  //Detection pour mettre la musique ------------------------------------
 
   useEffect(() => {
     socket.on("setUrl", (URL) => {
       setYTURL(URL);
     });
+
+    socket.on("estParti", ({ user }) => {
+      console.log("left");
+      setusersVrai(usersBonneRep.filter((item) => item.name !== user.name));
+    });
   });
 
+  //Demarage du jeu dans 10 secondes ------------------------------------
+
+  useEffect(() => {
+    console.log(users.length);
+    if (users.length === 1) {
+      alert("Le jeu commence dans 10 secondes !!!");
+
+      setTimeout(mettreUrl, 10000);
+    }
+  }, [users]);
+
+  // ------------------------------------------------ fonctions ----------------------
+
   function uniqueVrai() {
-    return [...new Set(usersVrai)];
+    return [...new Set(usersBonneRep)];
   }
 
   function sendMessage(event) {
@@ -89,7 +107,8 @@ export function Chat() {
   function enleverUrl() {
     setYTURL("");
   }
-  console.log(usersVrai);
+  console.log(usersBonneRep, users);
+
   if (!socket) {
     return <div>Chargement...</div>;
   } else {
