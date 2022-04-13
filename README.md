@@ -1,15 +1,53 @@
-# BlindTest
-Projet Transverse L3
+# Projet BlindTest
+
+Projet Transverse L3 :
+Création d'un site web permettant de jouer à un blindtest en ligne avec des amis.
 
 
+## 🛠 Skills
+**Client:** React, CSS
 
-Pour lancer : 
+**Server:** Node, Express, socket.io
 
-avoir 2 terminal : un dans le dossier backend et un dans le dossier frontend
-puis dans chaque terminal, faire :
+## Lancer le project localement
 
-npm install
+Cloner le project
 
-et apres
+```bash
+  git clone https://github.com/Malo-LC/BlindTest
+```
+Avoir 2 terminal et faire sur le premier
 
-npm start
+```bash
+  cd Backend
+```
+
+Installer les extensions
+
+```bash
+  npm install
+```
+
+Lancer le server
+
+```bash
+  npm run start
+```
+
+Puis faire les étapes suivantes dans le deuxième terminal
+
+```bash
+  cd Frontend
+```
+
+Installer les extensions
+
+```bash
+  npm install
+```
+
+Lancer le server
+
+```bash
+  npm run start
+```
