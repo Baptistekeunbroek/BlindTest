@@ -4,10 +4,13 @@
   outline: none;
 }
 
+.containerBarreBig {
+  margin-top: 120px;
+}
 .containerBarre {
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  margin-top: 20px;
 }
 @keyframes gradient {
   0% {
@@ -60,4 +63,14 @@
 }
 .webflow-style-input input::-webkit-input-placeholder {
   color: #7881a1;
+}
+
+.presOuPas {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  color: #2979ff;
+  font-size: 48px;
+  font-family: "Signika", sans-serif;
+  padding-bottom: 10px;
 }

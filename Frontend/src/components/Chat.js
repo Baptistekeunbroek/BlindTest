@@ -20,6 +20,7 @@ export function Chat() {
   const [room, setRoom] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [verif, setVerif] = useState(true);
   const [YTURL, setYTURL] = useState("");
   const [users, setUsers] = useState("");
   const [usersBonneRep, setusersVrai] = useState([]);
@@ -33,7 +34,9 @@ export function Chat() {
     //console.log(socket)
     setName(name);
     setRoom(room);
-
+    socket.on("roomData", ({ users }) => {
+      setUsers(users);
+    });
     socket.emit("join", { name, room }, () => {});
 
     return () => {
@@ -46,11 +49,7 @@ export function Chat() {
 
   useEffect(() => {
     socket.on("message", (message) => {
-      setMessages([...messages, message]); //  ... ca veut dire que ca garde tt les anciens messages dans le tableau et ca rajoute le nouveau a la fin
-    });
-
-    socket.on("roomData", ({ users }) => {
-      setUsers(users);
+      setMessages([...messages, message]); //  "..." ca veut dire que ca garde tt les anciens messages dans le tableau et ca rajoute le nouveau a la fin
     });
   }, [messages]);
 
@@ -79,8 +78,9 @@ export function Chat() {
 
   useEffect(() => {
     console.log(users.length);
-    if (users.length === 1) {
+    if (users.length === 1 && verif === true) {
       alert("Le jeu commence dans 10 secondes !!!");
+      setVerif(false);
 
       setTimeout(mettreUrl, 10000);
     }
@@ -107,7 +107,6 @@ export function Chat() {
   function enleverUrl() {
     setYTURL("");
   }
-  console.log(usersBonneRep, users);
 
   if (!socket) {
     return <div>Chargement...</div>;
@@ -136,8 +135,8 @@ export function Chat() {
             sendMessage={sendMessage}
           />
 
-          <button onClick={mettreUrl}>Mettre une url</button>
-          <button onClick={enleverUrl}>enlever une url</button>
+          {/* <button onClick={mettreUrl}>Mettre une url</button>
+          <button onClick={enleverUrl}>enlever une url</button> */}
         </div>
       </div>
     );

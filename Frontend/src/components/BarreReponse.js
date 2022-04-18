@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { stringSimilarity } from "string-similarity-js";
 import "./BarreReponse.css";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { RingProgress } from "@mantine/core";
+import "./popupAnimation.css";
 
 export function BarreReponse({ YTurl, socket }) {
   //console.log(YTurl)
@@ -28,17 +29,21 @@ export function BarreReponse({ YTurl, socket }) {
     if (similarite >= 0.9) {
       console.log("emit");
       socket.emit("similaire90");
-      setpresOuPas("");
+      setpresOuPas("Bonne réponse, trop fort");
+      setPopup(1);
       setReponse("");
     }
     if (similarite >= 0.8 && similarite < 0.9) {
       setpresOuPas("Proche de fou");
+      setPopup(1);
     }
     if (similarite >= 0.5 && similarite < 0.8) {
       setpresOuPas("Proche un peu");
+      setPopup(1);
     }
     if (similarite < 0.5) {
       setpresOuPas("Pas ca du tout mon reuf");
+      setPopup(1);
     }
     if (similarite === 0) {
       setpresOuPas("");
@@ -62,14 +67,19 @@ export function BarreReponse({ YTurl, socket }) {
     });
   }, [socket]);
 
+  const [popup, setPopup] = useState(0);
+
   if (YTurl === "") {
     return <div></div>;
   } else {
     return (
-      <div>
-        <p>Similarité : {similarite}</p>
-        <p>Time : {timer}</p>
-        <p>Proche : {presOuPas}</p>
+      <div class="containerBarreBig">
+        <div class="presOuPas">
+          <RingProgress
+            sections={[{ value: (timer * 100) / 30, color: "red" }]}
+            size={80}
+          />
+        </div>
         <div class="containerBarre">
           <div class="webflow-style-input">
             <input
@@ -81,6 +91,13 @@ export function BarreReponse({ YTurl, socket }) {
             />
           </div>
         </div>
+        <p
+          class="bonneReponse presOuPas"
+          onAnimationEnd={() => setPopup(0)}
+          popup={popup}
+        >
+          {presOuPas}
+        </p>
       </div>
     );
   }
