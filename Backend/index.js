@@ -73,8 +73,9 @@ io.on("connect", (socket) => {
   });
 
   socket.on("pretLancer", () => {
-    console.log("Pret de fou");
-    io.to(socket.id).emit("timer30");
+    const user = getUser(socket.id);
+
+    io.to(user.room).emit("timer30");
   });
 
   socket.on("putUrl", async () => {
@@ -82,16 +83,15 @@ io.on("connect", (socket) => {
 
     async function getYoutubePlaylist() {
       let data = await axios.get(
-        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLFFGmz6nJTieHdFyftKuo_E_GLTUeDurd&key=" +
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLq8u60UdCtaXXZaCJ8QbsyUUdm7YnnDAT&key=" +
           config.key
       );
-      //console.log(data)
+
       data = data.data.items;
       return data;
     }
     const youtube = await getYoutubePlaylist();
-    //console.log(youtube)
-
+    console.log("API");
     const taille = youtube.length;
     const randIndex = between(0, taille);
 

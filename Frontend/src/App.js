@@ -40,25 +40,25 @@ function NavigationBar() {
           </li>
         </ul>
       </nav>
-      <a className="contact">
+      <div className="contact">
         {" "}
         <button>Contact</button>
-      </a>
+      </div>
     </div>
   );
 }
 
-function Footer_() {
-  return (
-    <div className="footer">
-      <div className="footer_text">ceci est un test</div>
-    </div>
-  );
-}
+// function Footer_() {
+//   return (
+//     <div className="footer">
+//       <div className="footer_text">ceci est un test</div>
+//     </div>
+//   );
+// }
 
 function App() {
   return (
-    <div>
+    <div className="touteLaPage">
       <Router>
         <NavigationBar />
         <Routes>
@@ -66,7 +66,6 @@ function App() {
           <Route path="/join" element={<Join />} />
           <Route path="/chat" element={<Chat />} />
         </Routes>
-        {/* <Footer_ /> */}
       </Router>
     </div>
   );

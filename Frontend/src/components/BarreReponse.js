@@ -5,12 +5,12 @@ import { RingProgress } from "@mantine/core";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YTurl, socket }) {
-  //console.log(YTurl)
   const reponseAttendue = YTurl.title;
   const [reponse, setReponse] = useState("");
   const [similarite, setSimilarite] = useState(0);
   const [timer, setTimer] = useState(30);
   const [presOuPas, setpresOuPas] = useState("");
+  const [popup, setPopup] = useState(0);
 
   function testSimilarite() {
     return stringSimilarity(reponseAttendue, reponse);
@@ -29,20 +29,20 @@ export function BarreReponse({ YTurl, socket }) {
     if (similarite >= 0.9) {
       console.log("emit");
       socket.emit("similaire90");
-      setpresOuPas("Bonne réponse, trop fort");
+      setpresOuPas("Bonne réponse, trop fort !!!");
       setPopup(1);
       setReponse("");
     }
     if (similarite >= 0.8 && similarite < 0.9) {
-      setpresOuPas("Proche de fou");
+      setpresOuPas("Très proche... Recommence, tu y es presque");
       setPopup(1);
     }
     if (similarite >= 0.5 && similarite < 0.8) {
-      setpresOuPas("Proche un peu");
+      setpresOuPas("Proche...");
       setPopup(1);
     }
     if (similarite < 0.5) {
-      setpresOuPas("Pas ca du tout mon reuf");
+      setpresOuPas("Pas du tout ca !!!");
       setPopup(1);
     }
     if (similarite === 0) {
@@ -57,31 +57,35 @@ export function BarreReponse({ YTurl, socket }) {
 
   if (timer === 0) {
     console.log("ZERO");
-    setTimer(30);
+    setTimer(-1);
+    socket.emit("putUrl");
   }
+
+  useEffect(() => {
+    console.log(timer);
+  }, [timer]);
 
   useEffect(() => {
     socket.on("timer30", () => {
       console.log("Mis a 30");
       setTimer(30);
+      setSimilarite(0);
     });
-  }, [socket]);
-
-  const [popup, setPopup] = useState(0);
+  }, []);
 
   if (YTurl === "") {
     return <div></div>;
   } else {
     return (
-      <div class="containerBarreBig">
-        <div class="presOuPas">
+      <div className="containerBarreBig">
+        <div className="presOuPas">
           <RingProgress
             sections={[{ value: (timer * 100) / 30, color: "red" }]}
             size={80}
           />
         </div>
-        <div class="containerBarre">
-          <div class="webflow-style-input">
+        <div className="containerBarre">
+          <div className="webflow-style-input">
             <input
               className="inputBarre"
               placeholder="Tenter une réponse..."
@@ -92,7 +96,7 @@ export function BarreReponse({ YTurl, socket }) {
           </div>
         </div>
         <p
-          class="bonneReponse presOuPas"
+          className="bonneReponse presOuPas"
           onAnimationEnd={() => setPopup(0)}
           popup={popup}
         >

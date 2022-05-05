@@ -29,6 +29,7 @@ button {
   align-items: center;
   padding: 30px 10%;
   background-color: #24252a;
+  height: 10%;
 }
 
 .logo {
@@ -61,6 +62,10 @@ button {
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease 0s;
+}
+
+.touteLaPage {
+  height: 100%;
 }
 
 button:hover {

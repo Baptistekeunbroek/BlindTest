@@ -3,7 +3,7 @@ import "./Input.css";
 
 export function Input({ message, setMessage, sendMessage }) {
   return (
-    <form>
+    <form className="FormMessage">
       <input
         className="input"
         placeholder="Envoyer un message..."

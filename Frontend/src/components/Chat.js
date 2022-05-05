@@ -3,13 +3,12 @@ import queryString from "query-string";
 import io from "socket.io-client";
 import "./Chat.css";
 import "../App.css";
-
+import { Music } from "./Music";
 import { TextContainer } from "./TextContainer";
 import { BarreReponse } from "./BarreReponse";
 import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
-import { Music } from "./Music";
 
 const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
 
@@ -65,14 +64,20 @@ export function Chat() {
 
   useEffect(() => {
     socket.on("setUrl", (URL) => {
+      setusersVrai([]);
+      setYTURL("");
       setYTURL(URL);
     });
+  }, []);
 
+  //Detection lorsque quelqun part ------------------------------------
+
+  useEffect(() => {
     socket.on("estParti", ({ user }) => {
       console.log("left");
       setusersVrai(usersBonneRep.filter((item) => item.name !== user.name));
     });
-  });
+  }, []);
 
   //Demarage du jeu dans 10 secondes ------------------------------------
 
@@ -82,7 +87,7 @@ export function Chat() {
       alert("Le jeu commence dans 10 secondes !!!");
       setVerif(false);
 
-      setTimeout(mettreUrl, 10000);
+      setTimeout(mettreUrl, 1000);
     }
   }, [users]);
 
@@ -102,10 +107,7 @@ export function Chat() {
 
   function mettreUrl() {
     socket.emit("putUrl");
-  }
-
-  function enleverUrl() {
-    setYTURL("");
+    console.log("Initialisation");
   }
 
   if (!socket) {
@@ -134,9 +136,6 @@ export function Chat() {
             setMessage={setMessage}
             sendMessage={sendMessage}
           />
-
-          {/* <button onClick={mettreUrl}>Mettre une url</button>
-          <button onClick={enleverUrl}>enlever une url</button> */}
         </div>
       </div>
     );
