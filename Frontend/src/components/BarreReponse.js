@@ -59,11 +59,12 @@ export function BarreReponse({ YTurl, socket }) {
     console.log("ZERO");
     setTimer(-1);
     socket.emit("putUrl");
+    socket.emit("MAJMusiques");
   }
 
-  useEffect(() => {
-    console.log(timer);
-  }, [timer]);
+  // useEffect(() => {
+  //   console.log(timer);
+  // }, [timer]);
 
   useEffect(() => {
     socket.on("timer30", () => {

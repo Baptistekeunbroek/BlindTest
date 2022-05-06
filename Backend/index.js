@@ -1,18 +1,16 @@
 const http = require("http");
 const express = require("express");
-const socketio = require("socket.io");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const axios = require("axios");
 const { addUser, removeUser, getUser, getUsersInRoom } = require("./Users");
-const config = require("./config");
+const { addMusique, GetMusiques } = require("./historiqueMusiques");
+const { getYoutubePlaylist } = require("./FetchPlaylist");
 const router = require("./router");
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -24,6 +22,10 @@ app.use(router);
 
 function between(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
+}
+
+async function getPlay() {
+  return await getYoutubePlaylist();
 }
 
 io.on("connect", (socket) => {
@@ -78,26 +80,31 @@ io.on("connect", (socket) => {
     io.to(user.room).emit("timer30");
   });
 
-  socket.on("putUrl", async () => {
+  socket.on("MAJMusiques", () => {
     const user = getUser(socket.id);
+    console.log("MAJ");
+    const listeMusiques = GetMusiques();
 
-    async function getYoutubePlaylist() {
-      let data = await axios.get(
-        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLq8u60UdCtaXXZaCJ8QbsyUUdm7YnnDAT&key=" +
-          config.key
-      );
+    io.to(user.room).emit("voiciLaListe", { listeMusiques });
+  });
 
-      data = data.data.items;
-      return data;
-    }
-    const youtube = await getYoutubePlaylist();
-    console.log("API");
-    const taille = youtube.length;
-    const randIndex = between(0, taille);
+  socket.on("putUrl", () => {
+    getPlay().then((youtube) => {
+      const user = getUser(socket.id);
+      console.log(user);
 
-    io.to(user.room).emit("setUrl", {
-      URL: youtube[randIndex].snippet.resourceId.videoId,
-      title: youtube[randIndex].snippet.title,
+      const taille = youtube.length;
+      const randIndex = between(0, taille);
+
+      addMusique({
+        nom: youtube[randIndex].snippet.title,
+        photo: youtube[randIndex].snippet.thumbnails.high.url,
+      });
+
+      io.to(user.room).emit("setUrl", {
+        URL: youtube[randIndex].snippet.resourceId.videoId,
+        title: youtube[randIndex].snippet.title,
+      });
     });
   });
 
@@ -114,6 +121,4 @@ io.on("connect", (socket) => {
   });
 });
 
-server.listen(process.env.PORT || 5000, () =>
-  console.log("server has started on port : 5000")
-);
+server.listen(5000, () => console.log("server has started on port : 5000"));

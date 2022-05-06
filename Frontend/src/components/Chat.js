@@ -9,6 +9,7 @@ import { BarreReponse } from "./BarreReponse";
 import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
+import { Historique } from "./HistoriqueMusiques";
 
 const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
 
@@ -23,19 +24,20 @@ export function Chat() {
   const [YTURL, setYTURL] = useState("");
   const [users, setUsers] = useState("");
   const [usersBonneRep, setusersVrai] = useState([]);
+  const [listeMusiques, setlisteMusiques] = useState([]);
   //Arrivée d'un nouveau joueur ------------------------------------
   useEffect(() => {
     const { name, room } = queryString.parse(window.location.search);
 
-    socket = io(ENDPOINT);
+    socket = io(ENDPOINT, {
+      transports: ["websocket"],
+      upgrade: false,
+    });
 
-    console.log(name, room);
-    //console.log(socket)
+    // console.log(name, room);
+
     setName(name);
     setRoom(room);
-    socket.on("roomData", ({ users }) => {
-      setUsers(users);
-    });
     socket.emit("join", { name, room }, () => {});
 
     return () => {
@@ -47,11 +49,20 @@ export function Chat() {
   //Listes des messages ------------------------------------
 
   useEffect(() => {
+    socket.on("roomData", ({ users }) => {
+      setUsers(users);
+    });
+  }, []);
+
+  useEffect(() => {
     socket.on("message", (message) => {
       setMessages([...messages, message]); //  "..." ca veut dire que ca garde tt les anciens messages dans le tableau et ca rajoute le nouveau a la fin
     });
   }, [messages]);
 
+  useEffect(() => {
+    console.log(socket);
+  }, [socket]);
   //Detection des bonnes reponses ------------------------------------
 
   useEffect(() => {
@@ -63,7 +74,7 @@ export function Chat() {
   //Detection pour mettre la musique ------------------------------------
 
   useEffect(() => {
-    socket.on("setUrl", (URL) => {
+    socket.off("setUrl").on("setUrl", (URL) => {
       setusersVrai([]);
       setYTURL("");
       setYTURL(URL);
@@ -79,10 +90,16 @@ export function Chat() {
     });
   }, []);
 
+  useEffect(() => {
+    socket.off("voiciLaListe").on("voiciLaListe", ({ listeMusiques }) => {
+      console.log(listeMusiques);
+      setlisteMusiques(listeMusiques);
+    });
+  }, []);
+
   //Demarage du jeu dans 10 secondes ------------------------------------
 
   useEffect(() => {
-    console.log(users.length);
     if (users.length === 1 && verif === true) {
       alert("Le jeu commence dans 10 secondes !!!");
       setVerif(false);
@@ -126,7 +143,8 @@ export function Chat() {
             ))}
           </div>
           <BarreReponse YTurl={YTURL} socket={socket} />
-          <Music YTurl={YTURL} socket={socket} />
+          {YTURL !== "" ? <Music YTurl={YTURL} socket={socket} /> : null}
+          <Historique liste={listeMusiques} />
         </div>
         <div className="container">
           <InfoBar room={room} />

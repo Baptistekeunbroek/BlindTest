@@ -7,10 +7,11 @@ export function Music({ YTurl, socket }) {
     console.log("pret");
     socket.emit("pretLancer");
   }
-  console.log(YTurl);
+
   if (YTurl === "") {
     return <div></div>;
   } else {
+    console.log(YTurl);
     return (
       <div className="Music">
         <ReactPlayer
@@ -20,7 +21,6 @@ export function Music({ YTurl, socket }) {
           height="0px"
           volume={0.2}
           onReady={pret}
-          controls={false}
         />
       </div>
     );
