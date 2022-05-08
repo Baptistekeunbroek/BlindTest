@@ -8,12 +8,16 @@ export function Historique({ liste }) {
   } else
     return (
       <div className="historique">
-        {liste.map((element) => (
-          <div className="Musique" key={element}>
-            <img alt="miniature" className="Minia" src={element.photo} />
-            <p className="NomMusique">{element.nom} </p>
-          </div>
-        ))}
+        <p className="titreHisto">Historique des musiques :</p>
+        {liste
+          .slice(0)
+          .reverse()
+          .map((element) => (
+            <div className="Musique" key={element}>
+              <img alt="miniature" className="Minia" src={element.photo} />
+              <p className="NomMusique">{element.nom} </p>
+            </div>
+          ))}
       </div>
     );
 }

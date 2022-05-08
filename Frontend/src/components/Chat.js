@@ -134,17 +134,21 @@ export function Chat() {
       <div className="outerContainer">
         <div className="JeuHomePage">
           <TextContainer users={users} />
-          <div className="reponseDe">
-            Bonne réponse de :
-            {uniqueVrai().map((name) => (
-              <p key={name} className="activeItem">
-                {name}
-              </p>
-            ))}
+          <div className="BarreRepHisto">
+            <div className="partieGauche">
+              <div className="reponseDe">
+                Bonne réponse de :
+                {uniqueVrai().map((name) => (
+                  <p key={name} className="activeItem">
+                    {name}
+                  </p>
+                ))}
+              </div>
+              <BarreReponse YTurl={YTURL} socket={socket} />
+              {YTURL !== "" ? <Music YTurl={YTURL} socket={socket} /> : null}
+            </div>
+            <Historique liste={listeMusiques} />
           </div>
-          <BarreReponse YTurl={YTURL} socket={socket} />
-          {YTURL !== "" ? <Music YTurl={YTURL} socket={socket} /> : null}
-          <Historique liste={listeMusiques} />
         </div>
         <div className="container">
           <InfoBar room={room} />

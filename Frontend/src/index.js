@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
-  <div>
+  <div className="heightPage">
     <App />
   </div>,
   document.getElementById("root")

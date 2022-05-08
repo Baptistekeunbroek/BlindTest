@@ -25,3 +25,13 @@
 h1 {
   color: white;
 }
+
+.BarreRepHisto {
+  display: flex;
+  flex-direction: row;
+  height: 90%;
+  justify-content: space-around;
+}
+.partieGauche {
+  width: 60%;
+}

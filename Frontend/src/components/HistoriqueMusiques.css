@@ -1,0 +1,27 @@
+.Minia {
+  height: 50px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.historique {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  height: 98%;
+  width: 30%;
+  overflow: hidden;
+  color: white;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.titreHisto {
+  width: 100%;
+  text-align: center;
+  font-size: large;
+}
+.Musique {
+  display: flex;
+  border: 1px solid black;
+  padding: 20px;
+  justify-content: space-between;
+}
