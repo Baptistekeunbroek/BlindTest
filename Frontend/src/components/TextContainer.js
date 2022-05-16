@@ -4,6 +4,13 @@ import React from "react";
 export function TextContainer({ users, bonrep }) {
   console.log(bonrep);
   console.log(users);
+  if (bonrep.length === 0) {
+    console.log("Pas De bonne rep");
+    for (let j = 0; j < users.length; j++) {
+      users[j].coulor = "black";
+    }
+  }
+
   for (let i = 0; i < bonrep.length; i++) {
     for (let j = 0; j < users.length; j++) {
       console.log("true");
@@ -11,8 +18,6 @@ export function TextContainer({ users, bonrep }) {
         console.log("trueTrue");
 
         users[j].coulor = "green";
-      } else {
-        users[j].coulor = "black";
       }
     }
   }

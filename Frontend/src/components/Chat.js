@@ -11,7 +11,7 @@ import { Input } from "./Input";
 import { Messages } from "./Messages";
 import { Historique } from "./HistoriqueMusiques";
 
-const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtest-transverse.herokuapp.com/'
+const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
 
 let socket;
 

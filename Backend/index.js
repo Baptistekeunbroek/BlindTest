@@ -12,7 +12,6 @@ const {
 const { addMusique, GetMusiques } = require("./historiqueMusiques");
 const { getYoutubePlaylist } = require("./FetchPlaylist");
 const router = require("./router");
-const { addListener } = require("process");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -132,4 +131,6 @@ io.on("connect", (socket) => {
   });
 });
 
-server.listen(5000, () => console.log("server has started on port : 5000"));
+server.listen(process.env.PORT || 5000, () =>
+  console.log("server has started on port : 5000")
+);
