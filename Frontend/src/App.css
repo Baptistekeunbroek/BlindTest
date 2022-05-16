@@ -52,12 +52,12 @@ button {
 }
 
 .liens_nav li a:hover {
-  color: #0088a9;
+  color: #2979ff;
 }
 
 button {
   padding: 9px 25px;
-  background-color: rgba(0, 136, 169, 1);
+  background-color: #2979ff;
   border: none;
   border-radius: 50px;
   cursor: pointer;
@@ -69,7 +69,7 @@ button {
 }
 
 button:hover {
-  background-color: rgba(0, 136, 169, 0.8);
+  background-color: #013ea7;
 }
 
 .JoinForm {
@@ -78,7 +78,7 @@ button:hover {
 
 .Presentation {
   text-align: center;
-  color: rgba(0, 136, 169, 1);
+  color: #2979ff;
   display: flex;
   flex-direction: column;
   flex-grow: 3;
@@ -86,7 +86,7 @@ button:hover {
 
 .Presentation2 {
   text-align: center;
-  color: rgba(0, 136, 169, 1);
+  color: #2979ff;
 }
 
 .footer {

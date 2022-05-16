@@ -2,10 +2,17 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { addUser, removeUser, getUser, getUsersInRoom } = require("./Users");
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getUsersInRoom,
+  getAdmin,
+} = require("./Users");
 const { addMusique, GetMusiques } = require("./historiqueMusiques");
 const { getYoutubePlaylist } = require("./FetchPlaylist");
 const router = require("./router");
+const { addListener } = require("process");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -89,23 +96,27 @@ io.on("connect", (socket) => {
   });
 
   socket.on("putUrl", () => {
-    getPlay().then((youtube) => {
-      const user = getUser(socket.id);
-      console.log(user);
+    const user = getUser(socket.id);
+    const Admin = getAdmin();
 
-      const taille = youtube.length;
-      const randIndex = between(0, taille);
+    if (user.id == Admin.id) {
+      getPlay().then((youtube) => {
+        console.log("API");
 
-      addMusique({
-        nom: youtube[randIndex].snippet.title,
-        photo: youtube[randIndex].snippet.thumbnails.high.url,
+        const taille = youtube.length;
+        const randIndex = between(0, taille);
+
+        addMusique({
+          nom: youtube[randIndex].snippet.title,
+          photo: youtube[randIndex].snippet.thumbnails.high.url,
+        });
+
+        io.to(user.room).emit("setUrl", {
+          URL: youtube[randIndex].snippet.resourceId.videoId,
+          title: youtube[randIndex].snippet.title,
+        });
       });
-
-      io.to(user.room).emit("setUrl", {
-        URL: youtube[randIndex].snippet.resourceId.videoId,
-        title: youtube[randIndex].snippet.title,
-      });
-    });
+    }
   });
 
   socket.on("disconnect", () => {

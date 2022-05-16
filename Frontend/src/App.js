@@ -22,11 +22,22 @@ function Home() {
 function NavigationBar() {
   return (
     <div className="nav_bar">
-      <img
-        className="logo"
-        src="https://fr.seaicons.com/wp-content/uploads/2015/10/music-orange-icon.png"
-        alt="logo"
-      />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="icon icon-tabler icon-tabler-brand-tiktok"
+        width="50"
+        height="50"
+        viewBox="0 0 24 24"
+        strokeWidth="2"
+        stroke="currentColor"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        color="white"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M9 12a4 4 0 1 0 4 4v-12a5 5 0 0 0 5 5"></path>
+      </svg>
       <nav>
         <ul className="liens_nav">
           <li>
@@ -35,14 +46,11 @@ function NavigationBar() {
           <li>
             <Link to={"/join"}>Join</Link>
           </li>
-          <li>
-            <Link to={"/"}>Playlist</Link>
-          </li>
         </ul>
       </nav>
       <div className="contact">
         {" "}
-        <button>Contact</button>
+        <button className="btn-75">Contact</button>
       </div>
     </div>
   );

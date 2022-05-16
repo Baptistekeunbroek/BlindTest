@@ -29,7 +29,7 @@ h1 {
 .BarreRepHisto {
   display: flex;
   flex-direction: row;
-  height: 90%;
+  height: 100%;
   justify-content: space-around;
 }
 .partieGauche {
