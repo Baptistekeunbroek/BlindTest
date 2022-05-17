@@ -16,7 +16,7 @@ Cloner le project
 ```bash
   git clone https://github.com/Malo-LC/BlindTest
 ```
-Avoir 2 terminal et faire sur le premier
+Dans un premier terminal faire :
 
 ```bash
   cd Backend
@@ -34,7 +34,7 @@ Lancer le server
   npm run start
 ```
 
-Puis faire les étapes suivantes dans le deuxième terminal
+Puis faire les étapes suivantes dans un deuxième terminal :
 
 ```bash
   cd Frontend
