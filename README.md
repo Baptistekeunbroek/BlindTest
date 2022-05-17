@@ -2,6 +2,7 @@
 
 Projet Transverse L3 :
 Création d'un site web permettant de jouer à un blindtest en ligne avec des amis.
+Testez le ici : the-great-malo-lc-site.netlify.app/
 
 
 ## 🛠 Skills
@@ -9,7 +10,7 @@ Création d'un site web permettant de jouer à un blindtest en ligne avec des am
 
 **Server:** Node, Express, socket.io
 
-## Lancer le project localement
+## Lancer le project en server local
 
 Cloner le project
 
