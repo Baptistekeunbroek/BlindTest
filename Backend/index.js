@@ -16,7 +16,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -89,14 +89,14 @@ io.on("connect", (socket) => {
   socket.on("MAJMusiques", () => {
     const user = getUser(socket.id);
     console.log("MAJ");
-    const listeMusiques = GetMusiques();
+    const listeMusiques = GetMusiques({ room: user.room });
 
     io.to(user.room).emit("voiciLaListe", { listeMusiques });
   });
 
   socket.on("putUrl", () => {
     const user = getUser(socket.id);
-    const Admin = getAdmin();
+    const Admin = getAdmin({ room: user.room });
 
     if (user.id == Admin.id) {
       getPlay().then((youtube) => {
@@ -108,6 +108,7 @@ io.on("connect", (socket) => {
         addMusique({
           nom: youtube[randIndex].snippet.title,
           photo: youtube[randIndex].snippet.thumbnails.high.url,
+          room: user.room,
         });
 
         io.to(user.room).emit("setUrl", {

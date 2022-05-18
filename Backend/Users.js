@@ -31,8 +31,14 @@ function getUsersInRoom(room) {
   return users.filter((user) => user.room === room);
 }
 
-function getAdmin() {
-  return users[0];
+function getAdmin({ room }) {
+  for (let i = 0; i < users.length; i++) {
+    // console.log(users[i].room);
+    // console.log(room);
+    if (users[i].room === room) {
+      return users[i];
+    }
+  }
 }
 
 module.exports = { addUser, removeUser, getUser, getUsersInRoom, getAdmin };
