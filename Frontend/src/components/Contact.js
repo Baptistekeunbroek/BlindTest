@@ -4,11 +4,33 @@ import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import bk from '../icons/bk.jpeg';
+import clement from '../icons/clement.png';
+import luk from '../icons/luk.png';
+import rems from '../icons/rems.png';
+import malo from '../icons/malo.jpeg';
 import './Contact.css';
 
 export function Contact() {
   return (
     <Card>
+      <Box>
+        <CardMedia
+          component="img"
+          image={malo}
+          sx={{
+            height: 300,
+            width: 350,
+          }}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Malo Le Corvec
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            malo.le.corvec@efrei.net
+          </Typography>
+        </CardContent>
+      </Box>
       <Box>
         <CardMedia
           component="img"
@@ -31,7 +53,7 @@ export function Contact() {
       <Box>
         <CardMedia
           component="img"
-          src="https://i1.sndcdn.com/avatars-O4Zf03w0rsVlYevf-E9twPw-t500x500.jpg"
+          image={clement}
           sx={{
             height: 300,
             width: 350,
@@ -39,10 +61,10 @@ export function Contact() {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Malo Le Corvec
+            Clément Le Corre
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            adresse test info
+            clement.le.corre@efrei.net
           </Typography>
         </CardContent>
       </Box>
@@ -50,7 +72,7 @@ export function Contact() {
       <Box>
         <CardMedia
           component="img"
-          src="https://i1.sndcdn.com/avatars-O4Zf03w0rsVlYevf-E9twPw-t500x500.jpg"
+          image={luk}
           sx={{
             height: 300,
             width: 350,
@@ -58,17 +80,17 @@ export function Contact() {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Malo Le Corvec
+            Lucas Le Page
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            adresse test info
+            lucas.le.page@efrei.net
           </Typography>
         </CardContent>
       </Box>
       <Box>
         <CardMedia
           component="img"
-          src="https://i1.sndcdn.com/avatars-O4Zf03w0rsVlYevf-E9twPw-t500x500.jpg"
+          image={rems}
           sx={{
             height: 300,
             width: 350,
@@ -76,31 +98,14 @@ export function Contact() {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Malo Le Corvec
+            Remi Paucton
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            adresse test info
+            remi.paucton@efrei.net
           </Typography>
         </CardContent>
       </Box>
-      <Box>
-        <CardMedia
-          component="img"
-          src="https://i1.sndcdn.com/avatars-O4Zf03w0rsVlYevf-E9twPw-t500x500.jpg"
-          sx={{
-            height: 300,
-            width: 350,
-          }}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Malo Le Corvec
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            adresse test info
-          </Typography>
-        </CardContent>
-      </Box>
+      
     </Card>
   );
 }
