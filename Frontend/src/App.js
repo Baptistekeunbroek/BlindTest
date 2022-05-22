@@ -68,10 +68,9 @@ function NavigationBar() {
         </ul>
       </nav>
       <div className="contact">
-        {' '}
-        <button className="btn-75">
-          <Link to={'/contact'}>Contact</Link>
-        </button>
+        <Link to={'/contact'}>
+          <button className="btn-75">Contact</button>
+        </Link>
       </div>
     </div>
   );
