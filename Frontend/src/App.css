@@ -1,4 +1,4 @@
-@import url("https:fonts.googleapis.com/css?family=Montserrat:500");
+@import url('https:fonts.googleapis.com/css?family=Montserrat:500');
 
 * {
   box-sizing: border-box;
@@ -16,7 +16,7 @@ body {
 li,
 a,
 button {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 16px;
   color: #edf0f1;
@@ -77,19 +77,31 @@ button:hover {
 }
 
 .Presentation {
+  margin: auto;
+  margin-top: 20px;
+  width: 50%;
+  justify-content: center;
   text-align: center;
   color: #2979ff;
   display: flex;
   flex-direction: column;
   flex-grow: 3;
 }
-
-.Presentation2 {
-  text-align: center;
-  color: #2979ff;
+.PresentationTitre {
+  margin-bottom: 20px;
 }
 
-.footer {
+.PresentationPave {
+  font-size: large;
+
+  text-align: center;
+  color: #ffffff;
+}
+.mt {
+  margin-top: 20px;
+}
+
+/* .footer {
   position: fixed;
   background: #24252a;
   bottom: 0;
@@ -105,4 +117,4 @@ button:hover {
 
 .body_footer {
   position: relative;
-}
+} */

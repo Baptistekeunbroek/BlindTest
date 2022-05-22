@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import queryString from "query-string";
-import io from "socket.io-client";
-import "./Chat.css";
-import "../App.css";
-import { Music } from "./Music";
-import { TextContainer } from "./TextContainer";
-import { BarreReponse } from "./BarreReponse";
-import { InfoBar } from "./InfoBar";
-import { Input } from "./Input";
-import { Messages } from "./Messages";
-import { Historique } from "./HistoriqueMusiques";
+import React, { useState, useEffect } from 'react';
+import queryString from 'query-string';
+import io from 'socket.io-client';
+import './Chat.css';
+import '../App.css';
+import { Music } from './Music';
+import { TextContainer } from './TextContainer';
+import { BarreReponse } from './BarreReponse';
+import { InfoBar } from './InfoBar';
+import { Input } from './Input';
+import { Messages } from './Messages';
+import { Historique } from './HistoriqueMusiques';
 
-const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
+const ENDPOINT = 'localhost:5000/'; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
 
 let socket;
 
 export function Chat() {
-  const [name, setName] = useState("");
-  const [room, setRoom] = useState("");
-  const [message, setMessage] = useState("");
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [verif, setVerif] = useState(true);
-  const [YTURL, setYTURL] = useState("");
-  const [users, setUsers] = useState("");
+  const [YTURL, setYTURL] = useState('');
+  const [users, setUsers] = useState('');
   const [usersBonneRep, setusersVrai] = useState([]);
   const [listeMusiques, setlisteMusiques] = useState([]);
   //Arrivée d'un nouveau joueur ------------------------------------
@@ -30,7 +30,7 @@ export function Chat() {
     const { name, room } = queryString.parse(window.location.search);
 
     socket = io(ENDPOINT, {
-      transports: ["websocket"],
+      transports: ['websocket'],
       upgrade: false,
     });
 
@@ -38,10 +38,10 @@ export function Chat() {
 
     setName(name);
     setRoom(room);
-    socket.emit("join", { name, room }, () => {});
+    socket.emit('join', { name, room }, () => {});
 
     return () => {
-      socket.emit("disconnect");
+      socket.emit('disconnect');
 
       socket.off();
     };
@@ -49,13 +49,13 @@ export function Chat() {
   //Listes des messages ------------------------------------
 
   useEffect(() => {
-    socket.on("roomData", ({ users }) => {
+    socket.on('roomData', ({ users }) => {
       setUsers(users);
     });
   }, []);
 
   useEffect(() => {
-    socket.on("message", (message) => {
+    socket.on('message', (message) => {
       setMessages([...messages, message]); //  "..." ca veut dire que ca garde tt les anciens messages dans le tableau et ca rajoute le nouveau a la fin
     });
   }, [messages]);
@@ -66,7 +66,7 @@ export function Chat() {
   //Detection des bonnes reponses ------------------------------------
 
   useEffect(() => {
-    socket.on("bonneReponse", ({ user }) => {
+    socket.on('bonneReponse', ({ user }) => {
       setusersVrai((usersBonneRep) => [...usersBonneRep, user]);
     });
   }, []);
@@ -74,9 +74,9 @@ export function Chat() {
   //Detection pour mettre la musique ------------------------------------
 
   useEffect(() => {
-    socket.off("setUrl").on("setUrl", (URL) => {
+    socket.off('setUrl').on('setUrl', (URL) => {
       setusersVrai([]);
-      setYTURL("");
+      setYTURL('');
       setYTURL(URL);
     });
   }, []);
@@ -84,14 +84,14 @@ export function Chat() {
   //Detection lorsque quelqun part ------------------------------------
 
   useEffect(() => {
-    socket.on("estParti", ({ user }) => {
-      console.log("left");
+    socket.on('estParti', ({ user }) => {
+      console.log('left');
       setusersVrai(usersBonneRep.filter((item) => item.name !== user.name));
     });
   }, []);
 
   useEffect(() => {
-    socket.off("voiciLaListe").on("voiciLaListe", ({ listeMusiques }) => {
+    socket.off('voiciLaListe').on('voiciLaListe', ({ listeMusiques }) => {
       console.log(listeMusiques);
       setlisteMusiques(listeMusiques);
     });
@@ -101,12 +101,20 @@ export function Chat() {
 
   useEffect(() => {
     if (users.length === 1 && verif === true) {
-      alert("Le jeu commence dans 10 secondes !!!");
+      alert('Le jeu commence dans 10 secondes !!!');
       setVerif(false);
 
       setTimeout(mettreUrl, 1000);
     }
   }, [users]);
+
+  useEffect(() => {
+    if (users.length === uniqueVrai().length && users.length !== 0) {
+      setTimeout(mettreUrl, 1000);
+      setTimeout(socket.emit('MAJMusiques'), 1000);
+      console.log('VraiBon');
+    }
+  }, [usersBonneRep]);
 
   // ------------------------------------------------ fonctions ----------------------
 
@@ -118,13 +126,13 @@ export function Chat() {
     event.preventDefault();
 
     if (message) {
-      socket.emit("sendMessage", message, () => setMessage(""));
+      socket.emit('sendMessage', message, () => setMessage(''));
     }
   }
 
   function mettreUrl() {
-    socket.emit("putUrl");
-    console.log("Initialisation");
+    socket.emit('putUrl');
+    console.log('Initialisation');
   }
 
   if (!socket) {
@@ -136,24 +144,8 @@ export function Chat() {
           <TextContainer users={users} bonrep={uniqueVrai()} />
           <div className="BarreRepHisto">
             <div className="partieGauche">
-              {/* {uniqueVrai().length !== 0 && (
-                <div className="BonneRepBig">
-                  {console.log(uniqueVrai())}
-                  <h1 className="BonneRepH1">Bonne réponse de : </h1>
-                  <div className="ListeBonneRep">
-                    <h2 className="listePers">
-                      {uniqueVrai().map((name) => (
-                        <p key={name} className="activeItem">
-                          {name}
-                        </p>
-                      ))}
-                    </h2>
-                  </div>
-                </div>
-              )} */}
-
               <BarreReponse YTurl={YTURL} socket={socket} />
-              {YTURL !== "" ? <Music YTurl={YTURL} socket={socket} /> : null}
+              {YTURL !== '' ? <Music YTurl={YTURL} socket={socket} /> : null}
             </div>
             <Historique liste={listeMusiques} />
           </div>
