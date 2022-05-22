@@ -56,9 +56,9 @@ export function Chat() {
 
   useEffect(() => {
     socket.on('message', (message) => {
-      setMessages([...messages, message]); //  "..." ca veut dire que ca garde tt les anciens messages dans le tableau et ca rajoute le nouveau a la fin
+      setMessages((messages) => [...messages, message]);
     });
-  }, [messages]);
+  }, []);
 
   useEffect(() => {
     console.log(socket);
