@@ -1,17 +1,20 @@
 .MuiCard-root {
-  margin-top: 50px;
-  background-color: transparent;
+  background-color: #4b4b52 !important;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 .MuiBox-root {
+  background-color: white;
   padding: 10px;
-  width: 70%;
+  width: 30%;
+  margin: 3px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border: 1px solid black;
 }
