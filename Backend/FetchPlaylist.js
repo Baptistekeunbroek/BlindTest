@@ -1,13 +1,9 @@
-const { key } = require('./config');
-const axios = require('axios');
+const yts = require("yt-search");
 
-async function getYoutubePlaylist() {
-  let data = await axios.get(
-    'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2&key=' +
-      key
-  );
-  data = data.data.items;
-  return data;
+async function getYouTubePlaylist() {
+  const list = await yts({ listId: "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2" });
+
+  return list.videos;
 }
 
-module.exports = { getYoutubePlaylist };
+module.exports = { getYouTubePlaylist };

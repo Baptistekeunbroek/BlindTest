@@ -1,5 +1,5 @@
-import React from 'react';
-import './Input.css';
+import React from "react";
+import "./Input.css";
 
 export function Input({ message, setMessage, sendMessage }) {
   return (
@@ -10,9 +10,7 @@ export function Input({ message, setMessage, sendMessage }) {
         type="text"
         value={message}
         onChange={(event) => setMessage(event.target.value)}
-        onKeyPress={(event) =>
-          event.key === 'Enter' ? sendMessage(event) : null
-        }
+        onKeyPress={(event) => (event.key === "Enter" ? sendMessage(event) : null)}
       />
       <button className="sendButton" onClick={(event) => sendMessage(event)}>
         Envoyer

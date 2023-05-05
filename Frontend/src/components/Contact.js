@@ -1,14 +1,14 @@
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
-import Box from '@mui/material/Box';
-import bk from '../icons/bk.jpeg';
-import clement from '../icons/clement.png';
-import luk from '../icons/luk.png';
-import rems from '../icons/rems.png';
-import malo from '../icons/malo.jpeg';
-import './Contact.css';
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
+import Box from "@mui/material/Box";
+import bk from "../icons/bk.jpeg";
+import clement from "../icons/clement.png";
+import luk from "../icons/luk.png";
+import rems from "../icons/rems.png";
+import malo from "../icons/malo.jpeg";
+import "./Contact.css";
 
 export function Contact() {
   return (
@@ -105,7 +105,6 @@ export function Contact() {
           </Typography>
         </CardContent>
       </Box>
-      
     </Card>
   );
 }

@@ -1,109 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import queryString from 'query-string';
-import io from 'socket.io-client';
-import './Chat.css';
-import '../App.css';
-import { Music } from './Music';
-import { TextContainer } from './TextContainer';
-import { BarreReponse } from './BarreReponse';
-import { InfoBar } from './InfoBar';
-import { Input } from './Input';
-import { Messages } from './Messages';
-import { Historique } from './HistoriqueMusiques';
+import React, { useState, useEffect } from "react";
+import io from "socket.io-client";
+import "./Chat.css";
+import { Music } from "./Music";
+import { TextContainer } from "./TextContainer";
+import { BarreReponse } from "./BarreReponse";
+import { InfoBar } from "./InfoBar";
+import { Input } from "./Input";
+import { Messages } from "./Messages";
+import { Historique } from "./HistoriqueMusiques";
 
-const ENDPOINT = 'localhost:5000/'; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
+const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
 
-let socket;
+let socket = null;
 
 export function Chat() {
-  const [name, setName] = useState('');
-  const [room, setRoom] = useState('');
-  const [message, setMessage] = useState('');
+  const query = new URLSearchParams(window.location.search);
+  const user = {
+    name: query.get("name"),
+    room: query.get("room"),
+  };
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [verif, setVerif] = useState(true);
-  const [YTURL, setYTURL] = useState('');
-  const [users, setUsers] = useState('');
-  const [usersBonneRep, setusersVrai] = useState([]);
-  const [listeMusiques, setlisteMusiques] = useState([]);
+  const [YtVideo, setYtVideo] = useState("");
+  const [users, setUsers] = useState("");
+  const [usersBonneRep, setUsersVrai] = useState([]);
+  const [listeMusiques, setListeMusiques] = useState([]);
+
   //Arrivée d'un nouveau joueur ------------------------------------
   useEffect(() => {
-    const { name, room } = queryString.parse(window.location.search);
-
+    const { name, room } = user;
     socket = io(ENDPOINT, {
-      transports: ['websocket'],
+      transports: ["websocket"],
       upgrade: false,
     });
 
-    // console.log(name, room);
+    socket.emit("join", { name, room }, () => {});
 
-    setName(name);
-    setRoom(room);
-    socket.emit('join', { name, room }, () => {});
-
-    return () => {
-      socket.emit('disconnect');
-
-      socket.off();
-    };
-  }, []);
-  //Listes des messages ------------------------------------
-
-  useEffect(() => {
-    socket.on('roomData', ({ users }) => {
+    socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
-  }, []);
 
-  useEffect(() => {
-    socket.on('message', (message) => {
+    socket.on("bonneReponse", ({ user }) => {
+      setUsersVrai((usersBonneRep) => [...usersBonneRep, user]);
+    });
+
+    socket.on("message", (message) => {
       setMessages((messages) => [...messages, message]);
     });
-  }, []);
 
-  useEffect(() => {
-    console.log(socket);
-  }, [socket]);
-  //Detection des bonnes reponses ------------------------------------
-
-  useEffect(() => {
-    socket.on('bonneReponse', ({ user }) => {
-      setusersVrai((usersBonneRep) => [...usersBonneRep, user]);
+    socket.on("setUrl", (URL) => {
+      setUsersVrai([]);
+      setYtVideo(URL);
     });
-  }, []);
 
-  //Detection pour mettre la musique ------------------------------------
-
-  useEffect(() => {
-    socket.off('setUrl').on('setUrl', (URL) => {
-      setusersVrai([]);
-      setYTURL('');
-      setYTURL(URL);
+    socket.on("estParti", ({ user }) => {
+      setUsersVrai(usersBonneRep.filter((item) => item.name !== user.name));
     });
-  }, []);
-
-  //Detection lorsque quelqun part ------------------------------------
-
-  useEffect(() => {
-    socket.on('estParti', ({ user }) => {
-      console.log('left');
-      setusersVrai(usersBonneRep.filter((item) => item.name !== user.name));
+    socket.on("voiciLaListe", ({ listeMusiques }) => {
+      setListeMusiques(listeMusiques);
     });
-  }, []);
 
-  useEffect(() => {
-    socket.off('voiciLaListe').on('voiciLaListe', ({ listeMusiques }) => {
-      console.log(listeMusiques);
-      setlisteMusiques(listeMusiques);
-    });
+    return () => socket.off("disconnect");
   }, []);
-
-  //Demarage du jeu dans 10 secondes ------------------------------------
 
   useEffect(() => {
     if (users.length === 1 && verif === true) {
-      alert('Le jeu commence dans 10 secondes !!!');
+      alert("Le jeu commence dans 10 secondes !!!");
       setVerif(false);
-
       setTimeout(mettreUrl, 1000);
     }
   }, [users]);
@@ -111,12 +75,9 @@ export function Chat() {
   useEffect(() => {
     if (users.length === uniqueVrai().length && users.length !== 0) {
       setTimeout(mettreUrl, 1000);
-      setTimeout(socket.emit('MAJMusiques'), 1000);
-      console.log('VraiBon');
+      setTimeout(socket.emit("MAJMusiques"), 1000);
     }
   }, [usersBonneRep]);
-
-  // ------------------------------------------------ fonctions ----------------------
 
   function uniqueVrai() {
     return [...new Set(usersBonneRep)];
@@ -124,42 +85,32 @@ export function Chat() {
 
   function sendMessage(event) {
     event.preventDefault();
-
-    if (message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
-    }
+    if (message) socket.emit("sendMessage", message, () => setMessage(""));
   }
 
   function mettreUrl() {
-    socket.emit('putUrl');
-    console.log('Initialisation');
+    socket.emit("putUrl");
   }
 
-  if (!socket) {
-    return <div>Chargement...</div>;
-  } else {
-    return (
-      <div className="outerContainer">
-        <div className="JeuHomePage">
-          <TextContainer users={users} bonrep={uniqueVrai()} />
-          <div className="BarreRepHisto">
-            <div className="partieGauche">
-              <BarreReponse YTurl={YTURL} socket={socket} />
-              {YTURL !== '' ? <Music YTurl={YTURL} socket={socket} /> : null}
-            </div>
-            <Historique liste={listeMusiques} />
+  if (!socket) return <div>Chargement...</div>;
+
+  return (
+    <div className="outerContainer">
+      <div className="JeuHomePage">
+        <TextContainer users={users} bonrep={uniqueVrai()} />
+        <div className="BarreRepHisto">
+          <div className="partieGauche">
+            <BarreReponse YtVideo={YtVideo} socket={socket} />
+            {YtVideo !== "" ? <Music YtVideo={YtVideo} socket={socket} /> : null}
           </div>
-        </div>
-        <div className="container">
-          <InfoBar room={room} />
-          <Messages messages={messages} name={name} />
-          <Input
-            message={message}
-            setMessage={setMessage}
-            sendMessage={sendMessage}
-          />
+          <Historique liste={listeMusiques} />
         </div>
       </div>
-    );
-  }
+      <div className="container">
+        <InfoBar room={user?.room} />
+        <Messages messages={messages} name={user?.name} />
+        <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+      </div>
+    </div>
+  );
 }

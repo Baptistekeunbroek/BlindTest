@@ -1,20 +1,14 @@
-import './TextContainer.css';
-import React from 'react';
+import "./TextContainer.css";
+import React from "react";
 
 export function TextContainer({ users, bonrep }) {
-  if (bonrep.length === 0) {
-    for (let j = 0; j < users.length; j++) {
-      users[j].coulor = 'black';
-    }
-  }
+  if (!users) return <div></div>;
 
-  for (let i = 0; i < bonrep.length; i++) {
-    for (let j = 0; j < users.length; j++) {
-      if (bonrep[i] === users[j].name) {
-        users[j].coulor = 'green';
-      }
-    }
-  }
+  users?.map((element) => {
+    if (bonrep.includes(element.name)) element.color = "green";
+    else element.color = "black";
+    return element;
+  });
 
   return (
     <div className="TextContainerBig">
@@ -23,8 +17,8 @@ export function TextContainer({ users, bonrep }) {
           <h1 className="livePers">Personnes connectées:</h1>
           <div className="activeContainer">
             <h2 className="listePers">
-              {users.map(({ name, coulor }, i) => (
-                <div key={i} style={{ color: coulor }} color={coulor}>
+              {users.map(({ name, color }, i) => (
+                <div key={i} style={{ color: color }} color={color}>
                   {name}
                 </div>
               ))}

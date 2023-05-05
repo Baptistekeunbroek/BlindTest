@@ -30,10 +30,7 @@ export function Join() {
             }}
           />
         </div>
-        <Link
-          onClick={(event) => (!name || !room ? event.preventDefault() : null)}
-          to={"/chat?name=" + name + "&room=" + room}
-        >
+        <Link onClick={(event) => (!name || !room ? event.preventDefault() : null)} to={"/chat?name=" + name + "&room=" + room}>
           <button type="submit mt-20" className={"button mt-20"}>
             Se connecter
           </button>

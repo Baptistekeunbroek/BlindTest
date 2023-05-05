@@ -5,16 +5,9 @@ function addMusique({ nom, photo, room }) {
   musiques.push(musique);
 }
 
-function GetMusiques({ room }) {
-  const musiqueDeLaRoom = [];
-  for (let i = 0; i < musiques.length; i++) {
-    // console.log(musiques[i].room);
-    // console.log(room);
-    if (musiques[i].room === room) {
-      musiqueDeLaRoom.push(musiques[i]);
-    }
-  }
+function getMusiques({ room }) {
+  const musiqueDeLaRoom = musiques.filter((musique) => musique.room === room);
   return [...new Set(musiqueDeLaRoom)];
 }
 
-module.exports = { addMusique, GetMusiques };
+module.exports = { addMusique, getMusiques };

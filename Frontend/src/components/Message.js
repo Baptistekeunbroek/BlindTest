@@ -1,18 +1,17 @@
-import React from 'react';
-import './Message.css';
+import React from "react";
+import "./Message.css";
 
-import ReactEmoji from 'react-emoji';
+import ReactEmoji from "react-emoji";
 
 export function Message({ message: { user, text }, name }) {
   let isSentByCurrentUser = false;
 
   const trimmedName = name.trim().toLowerCase();
-  if (user === trimmedName) {
-    isSentByCurrentUser = true;
-  }
+  if (user === trimmedName) isSentByCurrentUser = true;
+
   return isSentByCurrentUser ? (
     <div className="messageContainer justifyEnd">
-      <p className="sentText">{trimmedName}</p>
+      <p className="sentText">{user}</p>
       <div className="messageBox backgroundBlue">
         <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
       </div>
