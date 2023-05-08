@@ -50,7 +50,7 @@ function NavigationBar() {
       <nav>
         <ul className="liens_nav">
           <li>
-            <a href="/">Home</a>
+            <Link to={"/"}>Home</Link>
           </li>
           <li>
             <Link to={"/join"}>Join</Link>
@@ -65,14 +65,6 @@ function NavigationBar() {
     </div>
   );
 }
-
-// function Footer_() {
-//   return (
-//     <div className="footer">
-//       <div className="footer_text">ceci est un test</div>
-//     </div>
-//   );
-// }
 
 function App() {
   return (

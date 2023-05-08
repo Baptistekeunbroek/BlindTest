@@ -6,26 +6,27 @@ import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
   const reponseAttendue = YtVideo.title;
-  const [reponse, setReponse] = useState("");
+  const [reponse, setReponse] = useState(null);
   const [similarite, setSimilarite] = useState(0);
   const [timer, setTimer] = useState(30);
-  const [presOuPas, setPresOuPas] = useState("");
+  const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);
 
   function enterPress(event) {
     if (event.key === "Enter") {
       setSimilarite(stringSimilarity(reponseAttendue, reponse));
-      setReponse("");
+      setReponse(null);
     }
   }
 
   useEffect(() => {
     switch (true) {
       case similarite >= 0.9:
-        socket.emit("similaire90");
+        socket.emit("goodAnswer");
         setPresOuPas("Bonne réponse, trop fort !!!");
         setPopup(1);
-        setReponse("");
+        setReponse(null);
+        setTimer(50);
         break;
       case similarite >= 0.8 && similarite <= 0.9:
         setPresOuPas("Très proche... Recommence, tu y es presque");
@@ -35,12 +36,12 @@ export function BarreReponse({ YtVideo, socket }) {
         setPresOuPas("Proche...");
         setPopup(1);
         break;
-      case similarite < 0.5:
+      case similarite < 0.5 && similarite !== 0:
         setPresOuPas("Pas du tout ca !!!");
         setPopup(1);
         break;
       case similarite === 0:
-        setPresOuPas("");
+        setPresOuPas(null);
         break;
       default:
         break;
@@ -51,6 +52,7 @@ export function BarreReponse({ YtVideo, socket }) {
     if (timer <= 0) {
       socket.emit("putUrl");
       socket.emit("MAJMusiques");
+      setTimer(50);
     }
   }, [timer]);
 
@@ -72,10 +74,17 @@ export function BarreReponse({ YtVideo, socket }) {
       </div>
       <div className="containerBarre">
         <div className="webflow-style-input">
-          <input className="inputBarre" placeholder="Tenter une réponse..." type="text" onKeyPress={(e) => enterPress(e)} onChange={(event) => setReponse(event.target.value)} />
+          <input
+            value={reponse || ""}
+            className="inputBarre"
+            placeholder="Tenter une réponse..."
+            type="text"
+            onKeyPress={(e) => enterPress(e)}
+            onChange={(event) => setReponse(event.target.value)}
+          />
         </div>
       </div>
-      <p className="bonneReponse presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
+      <p className="goodAnswer presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
         {presOuPas}
       </p>
     </div>

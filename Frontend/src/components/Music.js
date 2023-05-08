@@ -1,19 +1,29 @@
 import React from "react";
-import ReactPlayer from "react-player/youtube";
 import "./Music.css";
 
 export function Music({ YTurl, socket }) {
-  const [pretLancer, setPretLancer] = React.useState(false);
+  const iframeRef = React.useRef(null);
+
   function pret() {
-    socket.emit("pretLancer");
-    setPretLancer(true);
+    socket.emit("readyToPlay");
+    setTimeout(() => {
+      iframeRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*");
+    }, 2000);
   }
 
   if (!YTurl) return <div></div>;
 
   return (
     <div className="usic">
-      <ReactPlayer url={"https://www.youtube.com/watch?v=" + YTurl.URL} playing={pretLancer} volume={0} onReady={pret} />
+      <iframe
+        onLoad={pret}
+        ref={iframeRef}
+        className="iframe"
+        src={"https://yewtu.be/embed/" + YTurl.URL}
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
     </div>
   );
 }

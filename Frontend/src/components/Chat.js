@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./Chat.css";
 import { Music } from "./Music";
-import { TextContainer } from "./TextContainer";
+import { ConnectedUsers } from "./ConnectedUsers";
 import { BarreReponse } from "./BarreReponse";
 import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
@@ -24,7 +24,6 @@ export function Chat() {
   const [verif, setVerif] = useState(true);
   const [YtVideo, setYtVideo] = useState("");
   const [users, setUsers] = useState("");
-  const [usersBonneRep, setUsersVrai] = useState([]);
   const [listeMusiques, setListeMusiques] = useState([]);
 
   //Arrivée d'un nouveau joueur ------------------------------------
@@ -41,22 +40,14 @@ export function Chat() {
       setUsers(users);
     });
 
-    socket.on("bonneReponse", ({ user }) => {
-      setUsersVrai((usersBonneRep) => [...usersBonneRep, user]);
-    });
-
     socket.on("message", (message) => {
       setMessages((messages) => [...messages, message]);
     });
 
     socket.on("setUrl", (URL) => {
-      setUsersVrai([]);
       setYtVideo(URL);
     });
 
-    socket.on("estParti", ({ user }) => {
-      setUsersVrai(usersBonneRep.filter((item) => item.name !== user.name));
-    });
     socket.on("voiciLaListe", ({ listeMusiques }) => {
       setListeMusiques(listeMusiques);
     });
@@ -72,17 +63,6 @@ export function Chat() {
     }
   }, [users]);
 
-  useEffect(() => {
-    if (users.length === uniqueVrai().length && users.length !== 0) {
-      setTimeout(mettreUrl, 1000);
-      setTimeout(socket.emit("MAJMusiques"), 1000);
-    }
-  }, [usersBonneRep]);
-
-  function uniqueVrai() {
-    return [...new Set(usersBonneRep)];
-  }
-
   function sendMessage(event) {
     event.preventDefault();
     if (message) socket.emit("sendMessage", message, () => setMessage(""));
@@ -97,11 +77,11 @@ export function Chat() {
   return (
     <div className="outerContainer">
       <div className="JeuHomePage">
-        <TextContainer users={users} bonrep={uniqueVrai()} />
+        <ConnectedUsers users={users} />
         <div className="BarreRepHisto">
           <div className="partieGauche">
             <BarreReponse YtVideo={YtVideo} socket={socket} />
-            {YtVideo !== "" ? <Music YtVideo={YtVideo} socket={socket} /> : null}
+            {YtVideo !== "" ? <Music YTurl={YtVideo} socket={socket} /> : null}
           </div>
           <Historique liste={listeMusiques} />
         </div>

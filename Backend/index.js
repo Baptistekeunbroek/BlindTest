@@ -2,7 +2,7 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { addUser, removeUser, getUser, getUsersInRoom, getAdmin } = require("./Users");
+const { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser } = require("./Users");
 const { addMusique, getMusiques } = require("./historiqueMusiques");
 const { getYouTubePlaylist } = require("./FetchPlaylist");
 const router = require("./router");
@@ -24,6 +24,13 @@ function between(min, max) {
 
 async function getPlay() {
   return await getYouTubePlaylist();
+}
+
+function resetVoteOfRoom(room) {
+  const users = getUsersInRoom(room);
+  users.forEach((user) => {
+    updateUser(user.id, "goodAnswer", false);
+  });
 }
 
 io.on("connect", (socket) => {
@@ -65,12 +72,39 @@ io.on("connect", (socket) => {
     callback();
   });
 
-  socket.on("similaire90", () => {
+  socket.on("goodAnswer", async () => {
     const user = getUser(socket.id);
-    io.to(user.room).emit("bonneReponse", { user: user.name });
+    updateUser(user.id, "score", user.score || 0 + 1);
+    updateUser(user.id, "goodAnswer", true);
+
+    const users = getUsersInRoom(user.room);
+    io.to(user.room).emit("roomData", { users });
+
+    const verify = users.every((user) => user.goodAnswer === true);
+    if (verify) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      io.to(user.room).emit("timer30");
+      getPlay().then((video) => {
+        const taille = video.length;
+        const randIndex = between(0, taille);
+        addMusique({
+          nom: video[randIndex].title,
+          photo: video[randIndex].thumbnail,
+          room: user.room,
+        });
+
+        io.to(user.room).emit("setUrl", {
+          URL: video[randIndex].videoId,
+          title: video[randIndex].title,
+        });
+      });
+    }
+    resetVoteOfRoom(user.room);
+
+    io.to(user.room).emit("roomData", { users });
   });
 
-  socket.on("pretLancer", () => {
+  socket.on("readyToPlay", () => {
     const user = getUser(socket.id);
 
     io.to(user.room).emit("timer30");
@@ -85,21 +119,21 @@ io.on("connect", (socket) => {
 
   socket.on("putUrl", () => {
     const user = getUser(socket.id);
-    const Admin = getAdmin({ room: user.room });
+    const admin = getAdmin({ room: user.room });
 
-    if (user.id == Admin.id) {
-      getPlay().then((YouTube) => {
-        const taille = YouTube.length;
+    if (user.id === admin.id) {
+      getPlay().then((video) => {
+        const taille = video.length;
         const randIndex = between(0, taille);
         addMusique({
-          nom: YouTube[randIndex].title,
-          photo: YouTube[randIndex].thumbnail,
+          nom: video[randIndex].title,
+          photo: video[randIndex].thumbnail,
           room: user.room,
         });
 
         io.to(user.room).emit("setUrl", {
-          URL: YouTube[randIndex].videoId,
-          title: YouTube[randIndex].title,
+          URL: video[randIndex].videoId,
+          title: video[randIndex].title,
         });
       });
     }

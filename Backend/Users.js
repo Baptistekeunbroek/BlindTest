@@ -20,6 +20,13 @@ function removeUser(id) {
   }
 }
 
+function updateUser(id, key, value) {
+  const index = users.findIndex((user) => user.id === id);
+  if (index !== -1) {
+    users[index][key] = value;
+  }
+}
+
 function getUser(id) {
   return users.find((user) => user.id === id);
 }
@@ -32,4 +39,4 @@ function getAdmin({ room }) {
   return users.find((user) => user.room === room);
 }
 
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, getAdmin };
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser };
