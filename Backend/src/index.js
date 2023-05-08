@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser } = require("./users");
-const { addMusique, getMusiques } = require("./musicHistory");
+const { addMusique, getMusiques, clearRoom } = require("./musicHistory");
 const { getPlaylist, setPlaylist } = require("./playlist");
 const router = require("./router");
 const app = express();
@@ -102,20 +102,13 @@ io.on("connect", (socket) => {
     }
     resetVoteOfRoom(user.room);
 
-    io.to(user.room).emit("roomData", { users });
+    io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
   });
 
   socket.on("readyToPlay", () => {
     const user = getUser(socket.id);
 
     io.to(user.room).emit("timer30");
-  });
-
-  socket.on("MAJMusiques", () => {
-    const user = getUser(socket.id);
-    const listeMusiques = getMusiques({ room: user.room });
-
-    io.to(user.room).emit("voiciLaListe", { listeMusiques });
   });
 
   socket.on("putUrl", () => {
@@ -137,6 +130,9 @@ io.on("connect", (socket) => {
           title: video[randIndex].title,
         });
       });
+      resetVoteOfRoom(user.room);
+      const users = getUsersInRoom(user.room);
+      io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
     }
   });
 
@@ -147,7 +143,13 @@ io.on("connect", (socket) => {
         user: "Console",
         text: `${user.name} a quitté la salle`,
       });
-      io.to(user.room).emit("estParti", { user });
+
+      const users = getUsersInRoom(user.room);
+      if (users?.length > 0) {
+        io.to(user.room).emit("roomData", { users });
+      } else {
+        clearRoom(user.room);
+      }
     }
   });
 });

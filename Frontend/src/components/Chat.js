@@ -24,7 +24,7 @@ export function Chat() {
   const [verif, setVerif] = useState(true);
   const [YtVideo, setYtVideo] = useState("");
   const [users, setUsers] = useState("");
-  const [listeMusiques, setListeMusiques] = useState([]);
+  const [musicHistory, setMusicHistory] = useState([]);
 
   useEffect(() => {
     const { name, room } = user;
@@ -35,8 +35,9 @@ export function Chat() {
 
     socket.emit("join", { name, room }, () => {});
 
-    socket.on("roomData", ({ users }) => {
+    socket.on("roomData", ({ users, musicHistory }) => {
       setUsers(users);
+      if (musicHistory) setMusicHistory(musicHistory);
     });
 
     socket.on("message", (message) => {
@@ -47,11 +48,10 @@ export function Chat() {
       setYtVideo(URL);
     });
 
-    socket.on("voiciLaListe", ({ listeMusiques }) => {
-      setListeMusiques(listeMusiques);
-    });
-
-    return () => socket.off("disconnect");
+    return () => {
+      socket?.off("connect");
+      socket?.off("disconnect");
+    };
   }, []);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export function Chat() {
             <BarreReponse YtVideo={YtVideo} socket={socket} />
             {YtVideo !== "" ? <Music YTurl={YtVideo?.URL} socket={socket} /> : null}
           </div>
-          <Historique liste={listeMusiques} />
+          <Historique liste={musicHistory} />
         </div>
       </div>
       <div className="container">

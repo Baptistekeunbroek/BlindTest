@@ -51,7 +51,6 @@ export function BarreReponse({ YtVideo, socket }) {
   useEffect(() => {
     if (timer <= 0) {
       socket.emit("putUrl");
-      socket.emit("MAJMusiques");
       setTimer(50);
     }
   }, [timer]);
