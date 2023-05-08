@@ -7,7 +7,7 @@ export function Music({ YTurl, socket }) {
   function pret() {
     socket.emit("readyToPlay");
     setTimeout(() => {
-      iframeRef.current.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*");
+      iframeRef.current.click();
     }, 2000);
   }
 
@@ -19,7 +19,7 @@ export function Music({ YTurl, socket }) {
         onLoad={pret}
         ref={iframeRef}
         className="iframe"
-        src={"https://yewtu.be/embed/" + YTurl.URL}
+        src={"https://yewtu.be/embed/" + YTurl}
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen

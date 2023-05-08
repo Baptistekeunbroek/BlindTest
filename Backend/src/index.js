@@ -2,9 +2,9 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser } = require("./Users");
-const { addMusique, getMusiques } = require("./historiqueMusiques");
-const { getYouTubePlaylist } = require("./FetchPlaylist");
+const { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser } = require("./users");
+const { addMusique, getMusiques } = require("./musicHistory");
+const { getPlaylist, setPlaylist } = require("./playlist");
 const router = require("./router");
 const app = express();
 const server = http.createServer(app);
@@ -23,7 +23,7 @@ function between(min, max) {
 }
 
 async function getPlay() {
-  return await getYouTubePlaylist();
+  return await getPlaylist();
 }
 
 function resetVoteOfRoom(room) {
@@ -34,11 +34,13 @@ function resetVoteOfRoom(room) {
 }
 
 io.on("connect", (socket) => {
-  socket.on("join", ({ name, room }, callback) => {
+  socket.on("join", async ({ name, room, playlistId }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
     if (error) {
       return callback(error);
     }
+
+    await setPlaylist(playlistId);
 
     socket.emit("message", {
       user: "Console",
@@ -74,7 +76,7 @@ io.on("connect", (socket) => {
 
   socket.on("goodAnswer", async () => {
     const user = getUser(socket.id);
-    updateUser(user.id, "score", user.score || 0 + 1);
+    updateUser(user.id, "score", (user.score || 0) + 1);
     updateUser(user.id, "goodAnswer", true);
 
     const users = getUsersInRoom(user.room);
@@ -83,7 +85,6 @@ io.on("connect", (socket) => {
     const verify = users.every((user) => user.goodAnswer === true);
     if (verify) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      io.to(user.room).emit("timer30");
       getPlay().then((video) => {
         const taille = video.length;
         const randIndex = between(0, taille);
@@ -92,11 +93,11 @@ io.on("connect", (socket) => {
           photo: video[randIndex].thumbnail,
           room: user.room,
         });
-
         io.to(user.room).emit("setUrl", {
           URL: video[randIndex].videoId,
           title: video[randIndex].title,
         });
+        io.to(user.room).emit("timer30");
       });
     }
     resetVoteOfRoom(user.room);

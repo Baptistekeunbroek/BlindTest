@@ -5,7 +5,7 @@ import { RingProgress } from "@mantine/core";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
-  const reponseAttendue = YtVideo.title;
+  const reponseAttendue = YtVideo?.title;
   const [reponse, setReponse] = useState(null);
   const [similarite, setSimilarite] = useState(0);
   const [timer, setTimer] = useState(30);
@@ -25,7 +25,6 @@ export function BarreReponse({ YtVideo, socket }) {
         socket.emit("goodAnswer");
         setPresOuPas("Bonne réponse, trop fort !!!");
         setPopup(1);
-        setReponse(null);
         setTimer(50);
         break;
       case similarite >= 0.8 && similarite <= 0.9:
@@ -44,6 +43,7 @@ export function BarreReponse({ YtVideo, socket }) {
         setPresOuPas(null);
         break;
       default:
+        setPresOuPas(null);
         break;
     }
   }, [similarite]);

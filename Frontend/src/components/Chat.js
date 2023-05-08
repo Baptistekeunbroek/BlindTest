@@ -26,7 +26,6 @@ export function Chat() {
   const [users, setUsers] = useState("");
   const [listeMusiques, setListeMusiques] = useState([]);
 
-  //Arrivée d'un nouveau joueur ------------------------------------
   useEffect(() => {
     const { name, room } = user;
     socket = io(ENDPOINT, {
@@ -81,7 +80,7 @@ export function Chat() {
         <div className="BarreRepHisto">
           <div className="partieGauche">
             <BarreReponse YtVideo={YtVideo} socket={socket} />
-            {YtVideo !== "" ? <Music YTurl={YtVideo} socket={socket} /> : null}
+            {YtVideo !== "" ? <Music YTurl={YtVideo?.URL} socket={socket} /> : null}
           </div>
           <Historique liste={listeMusiques} />
         </div>
