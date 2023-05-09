@@ -6,7 +6,7 @@ export function StartGame({ socket, user }) {
   const [error, setError] = React.useState(null);
 
   const start = () => {
-    socket.emit("putUrl", { playlistId: playlistRef.current?.value || null, init: true }, (error) => {
+    socket.emit("start", { playlistId: playlistRef.current?.value || null, init: true }, (error) => {
       if (error) {
         setError(error);
       }

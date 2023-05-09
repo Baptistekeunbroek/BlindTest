@@ -6,7 +6,14 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
     const regex = /(?<=list=)(.*?)(?=&|$)/;
     id = id?.match(regex)?.[0] || id;
     const list = await yts({ listId: id });
-    playlist[room] = list.videos;
+    const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
+    const videos = list?.videos?.map((video) => ({
+      title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
+      videoId: video.videoId,
+      thumbnail: video.thumbnail,
+    }));
+    console.log(videos);
+    playlist[room] = videos;
     return;
   } catch (error) {
     return { error: "Playlist not found" };
