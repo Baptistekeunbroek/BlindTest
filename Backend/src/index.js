@@ -4,7 +4,7 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser } = require("./users");
 const { addMusique, getMusiques, clearRoom } = require("./musicHistory");
-const { getPlaylist, setPlaylist } = require("./playlist");
+const { getNextSong, setPlaylist } = require("./playlist");
 const router = require("./router");
 const app = express();
 const server = http.createServer(app);
@@ -18,14 +18,15 @@ const io = new Server(server, {
 app.use(cors());
 app.use(router);
 
-function between(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
 function nextSong(room) {
-  const video = getPlaylist();
-  const taille = video.length;
-  const randIndex = between(0, taille);
+  const video = getNextSong();
+  if (!video) {
+    io.to(room).emit("message", {
+      user: "Console",
+      text: "La playlist est vide, partie terminée !",
+    });
+    return;
+  }
   addMusique({
     nom: video[randIndex].title,
     photo: video[randIndex].thumbnail,

@@ -7,6 +7,16 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2") {
   return playlist;
 }
 
-const getPlaylist = () => playlist;
+function between(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
 
-module.exports = { setPlaylist, getPlaylist };
+const getNextSong = () => {
+  const taille = playlist.length;
+  if (taille === 0) return null;
+  const randIndex = between(0, taille);
+  // return the song and remove it from the playlist
+  return playlist.splice(randIndex, 1);
+};
+
+module.exports = { setPlaylist, getNextSong };
