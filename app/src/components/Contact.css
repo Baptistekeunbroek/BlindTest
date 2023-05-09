@@ -1,4 +1,4 @@
-.MuiCard-root {
+.contactBig {
   background-color: #4b4b52 !important;
   width: 100%;
   display: flex;
@@ -7,7 +7,7 @@
   flex-wrap: wrap;
 }
 
-.MuiBox-root {
+.contactUser {
   background-color: white;
   padding: 10px;
   width: 30%;
@@ -17,4 +17,13 @@
   justify-content: center;
   align-items: center;
   border: 1px solid black;
+}
+
+.contactImg {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  border: 1px solid black;
+  object-fit: cover;
 }
