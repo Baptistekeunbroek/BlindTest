@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   margin-top: 120px;
   color: #fff;
   font-size: 20px;
@@ -19,16 +19,23 @@
 }
 
 .StartGameSubtitle {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
 }
 
 .StartGameInput {
-  border: none;
-  border-radius: 0;
-  font-size: 1.1em;
+  border: white 1px solid;
+  border-radius: 500px;
+  font-size: 0.9em;
   color: white;
   background-color: #4b4b52;
   width: 100%;
   text-align: center;
+  margin-bottom: 20px;
+}
+
+.StartGameError {
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
 }

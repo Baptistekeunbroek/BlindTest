@@ -3,9 +3,14 @@ import "./StartGame.css";
 
 export function StartGame({ socket, user }) {
   const playlistRef = React.useRef(null);
+  const [error, setError] = React.useState(null);
 
   const start = () => {
-    socket.emit("putUrl", playlistRef.current?.value);
+    socket.emit("putUrl", { playlistId: playlistRef.current?.value || null, init: true }, (error) => {
+      if (error) {
+        setError(error);
+      }
+    });
   };
 
   return (
@@ -13,13 +18,13 @@ export function StartGame({ socket, user }) {
       <h1 className="StartGameTitle">Bienvenue sur le Blindtest</h1>
       {user?.admin ? (
         <>
-          <p className="StartGameSubtitle">Mettre une playlist personnelle (mettre uniquement l'id de la playlist youtube)</p>
-          <p className="StartGameSubtitle">Max 100 musiques, la réponse est le titre de la vidéo</p>
+          <p className="StartGameSubtitle">Mettre une playlist personnelle (copiez le lien de la playlist)</p>
           <p className="StartGameSubtitle">Non obligatoire, laisser vide pour lancer avec la playlist par défaut</p>
-          <input className="StartGameInput" placeholder="PLy6N_9yB8Qwy6LL0J7zLUy..." ref={playlistRef} />
+          <input className="StartGameInput" placeholder="https://www.youtube.com/playlist?list=jkzah..." ref={playlistRef} />
           <button className="StartGameButton" onClick={start}>
             Commencer la partie
           </button>
+          {error && <p className="StartGameError">{error}</p>}
         </>
       ) : (
         <h2 className="StartGameTitle">En attente du début de la partie</h2>

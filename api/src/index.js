@@ -2,24 +2,20 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const { Server } = require("socket.io");
-const { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser } = require("./users");
+const { addUser, removeUser, getUser, getUsersInRoom, updateUser } = require("./users");
 const { addMusique, getMusiques, clearRoom } = require("./musicHistory");
 const { getNextSong, setPlaylist } = require("./playlist");
 const router = require("./router");
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
 
 app.use(cors());
 app.use(router);
+app.use(express.json());
 
 function nextSong(room) {
-  const video = getNextSong();
+  const video = getNextSong(room);
+  console.log(video);
   if (!video) {
     io.to(room).emit("message", {
       user: "Console",
@@ -28,16 +24,23 @@ function nextSong(room) {
     return;
   }
   addMusique({
-    nom: video[randIndex].title,
-    photo: video[randIndex].thumbnail,
+    nom: video.title,
+    photo: video.thumbnail,
     room: room,
   });
   io.to(room).emit("setUrl", {
-    URL: video[randIndex].videoId,
-    title: video[randIndex].title,
+    URL: video.videoId,
+    title: video.title,
   });
   io.to(room).emit("timer30");
 }
+
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 function resetVoteOfRoom(room) {
   const users = getUsersInRoom(room);
@@ -47,13 +50,11 @@ function resetVoteOfRoom(room) {
 }
 
 io.on("connect", (socket) => {
-  socket.on("join", async ({ name, room, playlistId }, callback) => {
+  socket.on("join", async ({ name, room }, callback) => {
     const { error, user } = addUser({ id: socket.id, name, room });
     if (error) {
       return callback(error);
     }
-
-    await setPlaylist(playlistId);
 
     socket.emit("message", {
       user: "Console",
@@ -109,12 +110,23 @@ io.on("connect", (socket) => {
     io.to(user.room).emit("timer30");
   });
 
-  socket.on("putUrl", async (playlistId) => {
+  socket.on("start", async ({ playlistId }, callback) => {
     const user = getUser(socket.id);
-    const admin = getAdmin({ room: user.room });
 
-    if (user.id === admin.id) {
-      if (playlistId) await setPlaylist(playlistId);
+    if (user.admin) {
+      const resPlaylist = await setPlaylist(playlistId || undefined, user.room);
+      if (resPlaylist?.error) return callback(resPlaylist.error);
+      resetVoteOfRoom(user.room);
+      const users = getUsersInRoom(user.room);
+      io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
+      nextSong(user.room);
+    }
+  });
+
+  socket.on("putUrl", () => {
+    const user = getUser(socket.id);
+
+    if (user.admin) {
       resetVoteOfRoom(user.room);
       const users = getUsersInRoom(user.room);
       io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });

@@ -72,7 +72,7 @@ export function BarreReponse({ YtVideo, socket }) {
             className="inputBarre"
             placeholder="Tenter une réponse..."
             type="text"
-            onKeyPress={(e) => enterPress(e)}
+            onKeyDown={(e) => enterPress(e)}
             onChange={(event) => setReponse(event.target.value)}
           />
         </div>

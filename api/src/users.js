@@ -38,8 +38,4 @@ function getUsersInRoom(room) {
   return users.filter((user) => user.room === room);
 }
 
-function getAdmin({ room }) {
-  return users.find((user) => user.room === room);
-}
-
-module.exports = { addUser, removeUser, getUser, getUsersInRoom, getAdmin, updateUser };
+module.exports = { addUser, removeUser, getUser, getUsersInRoom, updateUser };

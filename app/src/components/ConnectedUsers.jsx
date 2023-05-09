@@ -1,5 +1,4 @@
 import "./ConnectedUsers.css";
-import React from "react";
 
 export function ConnectedUsers({ users }) {
   if (!users) return <div></div>;
