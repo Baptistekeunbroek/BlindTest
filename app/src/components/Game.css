@@ -1,8 +1,7 @@
 .outerContainer {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 90%;
+  height: 100%;
   background-color: #4b4b52;
   align-items: flex-start;
 }
@@ -12,7 +11,7 @@
   width: 75%;
 }
 
-.container {
+.rightContainer {
   display: flex;
   flex-direction: column;
   justify-content: space-between;

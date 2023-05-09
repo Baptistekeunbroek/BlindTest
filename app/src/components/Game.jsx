@@ -78,7 +78,7 @@ export function Game() {
           <Historique liste={musicHistory} />
         </div>
       </div>
-      <div className="container">
+      <div className="rightContainer">
         <InfoBar room={user?.room} />
         <Messages messages={messages} name={user?.name} />
         <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />

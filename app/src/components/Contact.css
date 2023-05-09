@@ -25,5 +25,6 @@
   border-radius: 50%;
   margin-bottom: 10px;
   border: 1px solid black;
+  background-url: url("https://www.w3schools.com/howto/img_avatar.png");
   object-fit: cover;
 }
