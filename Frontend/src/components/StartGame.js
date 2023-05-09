@@ -10,6 +10,8 @@ export function StartGame({ socket }) {
   return (
     <div className="StartGame">
       <h1 className="StartGameTitle">Bienvenue sur le Blindtest</h1>
+      {}
+      <input className="StartGameInput" placeholder="Mettre une playlist personnelle" />
       <button className="StartGameButton" onClick={start}>
         Commencer la partie
       </button>

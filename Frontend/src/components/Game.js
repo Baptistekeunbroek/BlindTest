@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import "./Chat.css";
+import "./Game.css";
 import { Music } from "./Music";
 import { ConnectedUsers } from "./ConnectedUsers";
 import { BarreReponse } from "./BarreReponse";
@@ -14,7 +14,7 @@ const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtes
 
 let socket = null;
 
-export function Chat() {
+export function Game() {
   const query = new URLSearchParams(window.location.search);
   const user = {
     name: query.get("name"),

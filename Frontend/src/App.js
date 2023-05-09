@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { Join } from "./components/Join";
-import { Chat } from "./components/Chat";
+import { Game } from "./components/Game";
 
 import { Contact } from "./components/Contact";
 
@@ -74,7 +74,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/join" element={<Join />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route path="/game" element={<Game />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </Router>
