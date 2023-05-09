@@ -71,7 +71,7 @@ io.on("connect", (socket) => {
       users: getUsersInRoom(user.room),
     });
 
-    callback();
+    callback(user);
   });
 
   socket.on("sendMessage", (message, callback) => {
@@ -108,11 +108,12 @@ io.on("connect", (socket) => {
     io.to(user.room).emit("timer30");
   });
 
-  socket.on("putUrl", () => {
+  socket.on("putUrl", async (playlistId) => {
     const user = getUser(socket.id);
     const admin = getAdmin({ room: user.room });
 
     if (user.id === admin.id) {
+      if (playlistId) await setPlaylist(playlistId);
       resetVoteOfRoom(user.room);
       const users = getUsersInRoom(user.room);
       io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });

@@ -16,10 +16,7 @@ let socket = null;
 
 export function Game() {
   const query = new URLSearchParams(window.location.search);
-  const user = {
-    name: query.get("name"),
-    room: query.get("room"),
-  };
+  const [user, setUser] = useState({ name: query.get("name"), room: query.get("room") });
   const [message, setMessage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [YtVideo, setYtVideo] = useState(null);
@@ -27,13 +24,14 @@ export function Game() {
   const [musicHistory, setMusicHistory] = useState([]);
 
   useEffect(() => {
-    const { name, room } = user;
     socket = io(ENDPOINT, {
       transports: ["websocket"],
       upgrade: false,
     });
 
-    socket.emit("join", { name, room }, () => {});
+    socket.emit("join", { name: query.get("name"), room: query.get("room") }, (user) => {
+      setUser(user);
+    });
 
     socket.on("roomData", ({ users, musicHistory }) => {
       setUsers(users);
@@ -73,7 +71,7 @@ export function Game() {
                 <Music YTurl={YtVideo?.URL} socket={socket} />
               </>
             ) : (
-              <StartGame socket={socket} />
+              <StartGame socket={socket} user={user} />
             )}
           </div>
           <Historique liste={musicHistory} />
