@@ -12,7 +12,6 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
       videoId: video.videoId,
       thumbnail: video.thumbnail,
     }));
-    console.log(videos);
     playlist[room] = videos;
     return;
   } catch (error) {
