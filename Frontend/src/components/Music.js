@@ -2,27 +2,20 @@ import React from "react";
 import "./Music.css";
 
 export function Music({ YTurl, socket }) {
-  const iframeRef = React.useRef(null);
-
   function pret() {
     socket.emit("readyToPlay");
-    setTimeout(() => {
-      iframeRef.current.click();
-    }, 2000);
   }
 
   if (!YTurl) return <div></div>;
 
   return (
-    <div className="usic">
+    <div className="Music">
       <iframe
         onLoad={pret}
-        ref={iframeRef}
+        onError={() => socket.emit("putUrl")}
         className="iframe"
-        src={"https://yewtu.be/embed/" + YTurl}
+        src={`https://yewtu.be/embed/${YTurl}?iv_load_policy=3&autoplay=1&continue=0&listen=true&quality=medium&comments=false&loop=0&volume=20&controls=0`}
         title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
       />
     </div>
   );

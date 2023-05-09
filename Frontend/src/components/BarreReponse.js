@@ -65,7 +65,6 @@ export function BarreReponse({ YtVideo, socket }) {
     return () => clearInterval(interval);
   }, []);
 
-  if (!YtVideo) return <div></div>;
   return (
     <div className="containerBarreBig">
       <div className="presOuPas">

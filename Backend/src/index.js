@@ -22,8 +22,20 @@ function between(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-async function getPlay() {
-  return await getPlaylist();
+function nextSong(room) {
+  const video = getPlaylist();
+  const taille = video.length;
+  const randIndex = between(0, taille);
+  addMusique({
+    nom: video[randIndex].title,
+    photo: video[randIndex].thumbnail,
+    room: room,
+  });
+  io.to(room).emit("setUrl", {
+    URL: video[randIndex].videoId,
+    title: video[randIndex].title,
+  });
+  io.to(room).emit("timer30");
 }
 
 function resetVoteOfRoom(room) {
@@ -85,29 +97,14 @@ io.on("connect", (socket) => {
     const verify = users.every((user) => user.goodAnswer === true);
     if (verify) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      getPlay().then((video) => {
-        const taille = video.length;
-        const randIndex = between(0, taille);
-        addMusique({
-          nom: video[randIndex].title,
-          photo: video[randIndex].thumbnail,
-          room: user.room,
-        });
-        io.to(user.room).emit("setUrl", {
-          URL: video[randIndex].videoId,
-          title: video[randIndex].title,
-        });
-        io.to(user.room).emit("timer30");
-      });
+      resetVoteOfRoom(user.room);
+      io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
+      nextSong(user.room);
     }
-    resetVoteOfRoom(user.room);
-
-    io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
   });
 
   socket.on("readyToPlay", () => {
     const user = getUser(socket.id);
-
     io.to(user.room).emit("timer30");
   });
 
@@ -116,23 +113,10 @@ io.on("connect", (socket) => {
     const admin = getAdmin({ room: user.room });
 
     if (user.id === admin.id) {
-      getPlay().then((video) => {
-        const taille = video.length;
-        const randIndex = between(0, taille);
-        addMusique({
-          nom: video[randIndex].title,
-          photo: video[randIndex].thumbnail,
-          room: user.room,
-        });
-
-        io.to(user.room).emit("setUrl", {
-          URL: video[randIndex].videoId,
-          title: video[randIndex].title,
-        });
-      });
       resetVoteOfRoom(user.room);
       const users = getUsersInRoom(user.room);
       io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
+      nextSong(user.room);
     }
   });
 

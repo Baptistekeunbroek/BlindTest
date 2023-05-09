@@ -3,7 +3,7 @@ import React from "react";
 import "./HistoriqueMusiques.css";
 
 export function Historique({ liste }) {
-  if (!liste?.length) return <div></div>;
+  if (!liste?.length) return null;
 
   return (
     <div className="historique">

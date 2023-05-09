@@ -8,6 +8,7 @@ import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
 import { Historique } from "./HistoriqueMusiques";
+import { StartGame } from "./StartGame.js";
 
 const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
 
@@ -19,11 +20,10 @@ export function Chat() {
     name: query.get("name"),
     room: query.get("room"),
   };
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [verif, setVerif] = useState(true);
-  const [YtVideo, setYtVideo] = useState("");
-  const [users, setUsers] = useState("");
+  const [YtVideo, setYtVideo] = useState(null);
+  const [users, setUsers] = useState(null);
   const [musicHistory, setMusicHistory] = useState([]);
 
   useEffect(() => {
@@ -54,24 +54,12 @@ export function Chat() {
     };
   }, []);
 
-  useEffect(() => {
-    if (users.length === 1 && verif === true) {
-      alert("Le jeu commence dans 10 secondes !!!");
-      setVerif(false);
-      setTimeout(mettreUrl, 1000);
-    }
-  }, [users]);
-
   function sendMessage(event) {
     event.preventDefault();
-    if (message) socket.emit("sendMessage", message, () => setMessage(""));
+    if (message) socket.emit("sendMessage", message, () => setMessage(null));
   }
 
-  function mettreUrl() {
-    socket.emit("putUrl");
-  }
-
-  if (!socket) return <div>Chargement...</div>;
+  if (!socket && !users) return <div>Chargement...</div>;
 
   return (
     <div className="outerContainer">
@@ -79,8 +67,14 @@ export function Chat() {
         <ConnectedUsers users={users} />
         <div className="BarreRepHisto">
           <div className="partieGauche">
-            <BarreReponse YtVideo={YtVideo} socket={socket} />
-            {YtVideo !== "" ? <Music YTurl={YtVideo?.URL} socket={socket} /> : null}
+            {YtVideo ? (
+              <>
+                <BarreReponse YtVideo={YtVideo} socket={socket} />
+                <Music YTurl={YtVideo?.URL} socket={socket} />
+              </>
+            ) : (
+              <StartGame socket={socket} />
+            )}
           </div>
           <Historique liste={musicHistory} />
         </div>

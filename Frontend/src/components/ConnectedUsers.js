@@ -13,9 +13,10 @@ export function ConnectedUsers({ users }) {
             <div className="listePers">
               {users.map((user) => (
                 <div key={user.id} style={{ color: user.goodAnswer ? "green" : "black" }} className="user">
+                  {user.admin ? "👑" : null}
                   <div>{user.name}</div>
-                  <div>{user.goodAnswer ? "👍" : ""}</div>
-                  <div>{user.score ? `(${user.score})` : "0"}</div>
+                  <div>{user.goodAnswer ? "👍" : null}</div>
+                  <div>{user.score ? `${user.score} pts` : null}</div>
                 </div>
               ))}
             </div>
