@@ -29,7 +29,6 @@ exports.connectToIoServer = (server) => {
       URL: video.videoId,
       title: video.title,
     });
-    io.to(room).emit("timer30");
   }
 
   function resetVoteOfRoom(room) {

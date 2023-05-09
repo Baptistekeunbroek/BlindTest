@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { stringSimilarity } from "string-similarity-js";
+import Timer from "@amplication/react-compound-timer";
 import "./BarreReponse.css";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
   const reponseAttendue = YtVideo?.title;
   const [reponse, setReponse] = useState(null);
-  const [timer, setTimer] = useState(30);
   const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);
+
+  const timerRef = React.useRef(null);
 
   function enterPress(event) {
     if (event.key === "Enter") {
@@ -19,10 +21,10 @@ export function BarreReponse({ YtVideo, socket }) {
   const testSimilarite = (similarite) => {
     switch (true) {
       case similarite >= 0.9:
+        timerRef.current?.pause();
         socket.emit("goodAnswer");
         setPresOuPas("Bonne réponse, trop fort !!!");
         setPopup(1);
-        setTimer(50);
         break;
       case similarite >= 0.8 && similarite <= 0.9:
         setPresOuPas("Très proche... Recommence, tu y es presque");
@@ -46,25 +48,27 @@ export function BarreReponse({ YtVideo, socket }) {
   };
 
   useEffect(() => {
-    if (timer <= 0) {
-      socket.emit("putUrl");
-      setTimer(50);
-    }
-  }, [timer]);
-
-  useEffect(() => {
-    const interval = setInterval(() => setTimer((timer) => timer - 1), 1000);
-
     socket.on("timer30", () => {
-      setTimer(30);
       setPresOuPas(null);
+      timerRef.current?.reset();
+      timerRef.current?.start();
     });
-    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="containerBarreBig">
-      <div className="presOuPas"></div>
+      <div className="timer">
+        <Timer ref={timerRef} startImmediately={false} direction="backward" initialTime={30000} checkpoints={[{ time: 0, callback: () => socket.emit("putUrl") }]}>
+          {() => (
+            <div>
+              <div className="time-remaining-container">
+                <div className="time-bar" style={{ width: `${(timerRef.current?.getTime() / 30000) * 100}%` }} />
+                <div className="time-text" />
+              </div>
+            </div>
+          )}
+        </Timer>
+      </div>
       <div className="containerBarre">
         <div className="webflow-style-input">
           <input

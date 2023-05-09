@@ -42,15 +42,7 @@
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
   background-position: 0% 0%;
-  background: linear-gradient(
-    to right,
-    #b294ff,
-    #57e6e6,
-    #feffb8,
-    #57e6e6,
-    #b294ff,
-    #57e6e6
-  );
+  background: linear-gradient(to right, #b294ff, #57e6e6, #feffb8, #57e6e6, #b294ff, #57e6e6);
   background-size: 500% auto;
   animation: gradient 2s linear infinite;
 }

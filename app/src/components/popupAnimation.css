@@ -25,3 +25,22 @@
     transform: scale(1);
   }
 }
+
+.time-remaining-container {
+  width: 200px; /* Adjust width as needed */
+  height: 20px; /* Adjust height as needed */
+  background-color: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.time-bar {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 1s linear; /* Adjust transition duration as needed */
+}
+
+.time-text {
+  text-align: center;
+  padding: 5px;
+}
