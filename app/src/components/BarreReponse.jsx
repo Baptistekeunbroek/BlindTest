@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { stringSimilarity } from "string-similarity-js";
 import "./BarreReponse.css";
-import { RingProgress } from "@mantine/core";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
   const reponseAttendue = YtVideo?.title;
   const [reponse, setReponse] = useState(null);
-  const [similarite, setSimilarite] = useState(0);
   const [timer, setTimer] = useState(30);
   const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);
 
   function enterPress(event) {
     if (event.key === "Enter") {
-      setSimilarite(stringSimilarity(reponseAttendue, reponse));
+      testSimilarite(stringSimilarity(reponseAttendue, reponse));
       setReponse(null);
     }
   }
-
-  useEffect(() => {
+  const testSimilarite = (similarite) => {
     switch (true) {
       case similarite >= 0.9:
         socket.emit("goodAnswer");
@@ -46,7 +43,7 @@ export function BarreReponse({ YtVideo, socket }) {
         setPresOuPas(null);
         break;
     }
-  }, [similarite]);
+  };
 
   useEffect(() => {
     if (timer <= 0) {
@@ -60,16 +57,14 @@ export function BarreReponse({ YtVideo, socket }) {
 
     socket.on("timer30", () => {
       setTimer(30);
-      setSimilarite(0);
+      setPresOuPas(null);
     });
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="containerBarreBig">
-      <div className="presOuPas">
-        <RingProgress sections={[{ value: (timer * 100) / 30, color: "red" }]} size={80} />
-      </div>
+      <div className="presOuPas"></div>
       <div className="containerBarre">
         <div className="webflow-style-input">
           <input
@@ -82,6 +77,7 @@ export function BarreReponse({ YtVideo, socket }) {
           />
         </div>
       </div>
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <p className="goodAnswer presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
         {presOuPas}
       </p>

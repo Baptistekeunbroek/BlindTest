@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import "./Game.css";
 import { Music } from "./Music";
@@ -8,7 +8,7 @@ import { InfoBar } from "./InfoBar";
 import { Input } from "./Input";
 import { Messages } from "./Messages";
 import { Historique } from "./HistoriqueMusiques";
-import { StartGame } from "./StartGame.js";
+import { StartGame } from "./StartGame";
 
 const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
 
@@ -50,6 +50,7 @@ export function Game() {
       socket?.off("connect");
       socket?.off("disconnect");
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function sendMessage(event) {

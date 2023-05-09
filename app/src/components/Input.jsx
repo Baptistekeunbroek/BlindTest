@@ -1,4 +1,3 @@
-import React from "react";
 import "./Input.css";
 
 export function Input({ message, setMessage, sendMessage }) {

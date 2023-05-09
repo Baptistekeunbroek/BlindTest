@@ -1,4 +1,3 @@
-import React from "react";
 import "./Message.css";
 
 export function Message({ message: { user, text }, name }) {
