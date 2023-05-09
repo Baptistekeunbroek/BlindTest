@@ -5,8 +5,10 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
   try {
     const regex = /(?<=list=)(.*?)(?=&|$)/;
     id = id?.match(regex)?.[0] || id;
+
     const list = await yts({ listId: id });
     const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
+
     const videos = list?.videos?.map((video) => ({
       title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
       videoId: video.videoId,
