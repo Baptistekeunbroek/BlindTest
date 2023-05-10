@@ -5,7 +5,26 @@ import "./BarreReponse.css";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
-  const reponseAttendue = YtVideo?.title;
+  const regex = /^(.*?)\s*[-,:]\s*(.*?)\s*(\b feat\b.*)?\s*(\b ft\b.*)?\s*(\bFt\b.*)?\s*(\b Feat\b.*)?$/;
+  const regexResult = YtVideo?.title?.match(regex);
+  const regSong = RegExp("[:'&,]\\s|Ft\\.|Feat\\.\\s", "g");
+
+  const artist = regexResult?.[1]?.split(", ")[0];
+  const songTitle = regexResult?.[2]?.replaceAll("'", "");
+
+  const remainingAnswers = regexResult
+    ? {
+        type: "artistAndSongTitle",
+        artist: { artist, found: false },
+        songTitle: { songTitle, found: false },
+      }
+    : {
+        type: "title",
+        title: { title: YtVideo?.title?.replaceAll(regSong, ""), found: false },
+      };
+
+  console.log(artist, songTitle, regexResult, YtVideo?.title, remainingAnswers);
+
   const [reponse, setReponse] = useState(null);
   const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);
@@ -14,29 +33,39 @@ export function BarreReponse({ YtVideo, socket }) {
 
   function enterPress(event) {
     if (event.key === "Enter") {
-      testSimilarite(stringSimilarity(reponseAttendue, reponse));
+      if (!regexResult) testSimilarite(stringSimilarity(YtVideo?.title, reponse), "title");
+      else {
+        testSimilarite(stringSimilarity(artist, reponse), "artist");
+        testSimilarite(stringSimilarity(songTitle, reponse), "songTitle");
+      }
       setReponse(null);
     }
   }
-  const testSimilarite = (similarite) => {
+  const testSimilarite = (similarite, type) => {
+    setPopup(1);
     switch (true) {
       case similarite >= 0.9:
-        timerRef.current?.pause();
-        socket.emit("goodAnswer");
-        setPresOuPas("Bonne réponse, trop fort !!!");
-        setPopup(1);
+        if (remainingAnswers[type].found === true) return setPresOuPas((prev) => ({ ...prev, [type]: "Déjà trouvé !!!" }));
+        remainingAnswers[type].found = true;
+        socket.emit("goodAnswer", remainingAnswers);
+        setPresOuPas((prev) =>
+          type === "title"
+            ? { ...prev, title: "Bonne réponse, trop fort !!!" }
+            : type === "artist"
+            ? { ...prev, title: "Artiste trouvé, bien joué !!!" }
+            : type === "songTitle"
+            ? { ...prev, title: "Bonne chanson, bien joué !!!" }
+            : null
+        );
         break;
       case similarite >= 0.8 && similarite <= 0.9:
         setPresOuPas("Très proche... Recommence, tu y es presque");
-        setPopup(1);
         break;
       case similarite >= 0.5 && similarite <= 0.8:
         setPresOuPas("Proche...");
-        setPopup(1);
         break;
       case similarite < 0.5 && similarite !== 0:
         setPresOuPas("Pas du tout ca !!!");
-        setPopup(1);
         break;
       case similarite === 0:
         setPresOuPas(null);
@@ -83,7 +112,7 @@ export function BarreReponse({ YtVideo, socket }) {
       </div>
       {/* eslint-disable-next-line react/no-unknown-property */}
       <p className="goodAnswer presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
-        {presOuPas}
+        {presOuPas?.title} {presOuPas?.artist} {presOuPas?.songTitle}
       </p>
     </div>
   );

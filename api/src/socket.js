@@ -11,8 +11,8 @@ exports.connectToIoServer = (server) => {
     },
   });
 
-  function nextSong(room) {
-    const video = getNextSong(room);
+  async function nextSong(room) {
+    const video = await getNextSong(room);
     if (!video) {
       io.to(room).emit("message", {
         user: "Console",
@@ -34,7 +34,7 @@ exports.connectToIoServer = (server) => {
   function resetVoteOfRoom(room) {
     const users = getUsersInRoom(room);
     users.forEach((user) => {
-      updateUser(user.id, "goodAnswer", false);
+      updateUser(user.id, "goodAnswer", { artist: false, songTitle: false, title: false });
     });
   }
 
@@ -77,15 +77,29 @@ exports.connectToIoServer = (server) => {
       callback();
     });
 
-    socket.on("goodAnswer", async () => {
+    socket.on("goodAnswer", async (answers) => {
       const user = getUser(socket.id);
-      updateUser(user.id, "score", (user.score || 0) + 1);
-      updateUser(user.id, "goodAnswer", true);
-
-      const users = getUsersInRoom(user.room);
+      let verify = false;
+      let users = null;
+      if (answers.type === "artistAndSongTitle") {
+        if (answers.artist.found === true && user.goodAnswer.artist === false) {
+          updateUser(user.id, "score", (user.score || 0) + 1);
+          updateUser(user.id, "goodAnswer", { artist: true, songTitle: user.goodAnswer.songTitle });
+        }
+        if (answers.songTitle.found === true && user.goodAnswer.songTitle === false) {
+          updateUser(user.id, "score", (user.score || 0) + 1);
+          updateUser(user.id, "goodAnswer", { artist: user.goodAnswer.artist, songTitle: true });
+        }
+        users = getUsersInRoom(user.room);
+        verify = users.every((user) => user.goodAnswer.artist === true && user.goodAnswer.songTitle === true);
+      } else {
+        updateUser(user.id, "score", (user.score || 0) + 1);
+        updateUser(user.id, "goodAnswer", { title: true });
+        users = getUsersInRoom(user.room);
+        verify = users.every((user) => user.goodAnswer.title === true);
+      }
       io.to(user.room).emit("roomData", { users });
 
-      const verify = users.every((user) => user.goodAnswer === true);
       if (verify) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         resetVoteOfRoom(user.room);

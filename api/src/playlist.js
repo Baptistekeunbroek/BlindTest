@@ -1,8 +1,17 @@
 const yts = require("yt-search");
+const { searchPlaylist } = require("./utils/spotifyTracks");
 const playlist = {};
 
 async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
   try {
+    playlist[room] = {};
+    if (id.startsWith("https://open.spotify.com/playlist/")) {
+      id = id.split("/playlist/")[1];
+      const data = await searchPlaylist(id);
+      if (!data.ok) return { error: data.error };
+      playlist[room].tracks = data.data;
+      playlist[room].source = "Spotify";
+    }
     const regex = /(?<=list=)(.*?)(?=&|$)/;
     id = id?.match(regex)?.[0] || id;
 
@@ -14,9 +23,11 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
       videoId: video.videoId,
       thumbnail: video.thumbnail,
     }));
-    playlist[room] = videos;
+    playlist[room].tracks = videos;
+    playlist[room].source = "Youtube";
     return;
   } catch (error) {
+    console.log(error);
     return { error: "Playlist not found" };
   }
 }
@@ -25,12 +36,37 @@ function between(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-const getNextSong = (room) => {
-  const taille = playlist[room]?.length;
+const searchSong = async (query) => {
+  try {
+    const { videos } = await yts(query);
+    const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
+    const video = videos[0];
+    return {
+      title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
+      videoId: video.videoId,
+      thumbnail: video.thumbnail,
+    };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+const getNextSong = async (room) => {
+  const taille = playlist[room]?.tracks?.length;
   if (!taille) return null;
   const randIndex = between(0, taille);
-  // return the song and remove it from the playlist
-  return playlist[room].splice(randIndex, 1)[0];
+  if (playlist[room].source === "Youtube") {
+    // return the song and remove it from the playlist
+    return playlist[room].tracks.splice(randIndex, 1)[0];
+  } else if (playlist[room].source === "Spotify") {
+    const currentSong = playlist[room].tracks[randIndex];
+    const song = await searchSong(`${currentSong.artist} ${currentSong.name}`);
+    if (!song) return null;
+    // return the song and remove it from the playlist
+    playlist[room].tracks.splice(randIndex, 1)[0];
+    return song;
+  }
 };
 
 module.exports = { setPlaylist, getNextSong };

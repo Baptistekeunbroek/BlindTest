@@ -42,9 +42,7 @@ export function Game() {
       setMessages((messages) => [...messages, message]);
     });
 
-    socket.on("setUrl", (URL) => {
-      setYtVideo(URL);
-    });
+    socket.on("setUrl", (URL) => setYtVideo(URL));
 
     return () => {
       socket?.off("connect");
