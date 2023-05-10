@@ -9,11 +9,11 @@ export function BarreReponse({ YtVideo, socket }) {
   const regex = /^(.*?)\s*[-,:]\s*(.*?)\s*(\b feat\b.*)?\s*(\b ft\b.*)?\s*(\bFt\b.*)?\s*(\b Feat\b.*)?$/;
   const regexResult = YtVideo?.title?.match(regex);
   // this regex is used to remove feat, ft, etc... from the song title
-  const regSong = RegExp("[:&,]\\s|Ft\\.|Feat\\.\\s", "g");
+  const regSong = RegExp("[:&,]\\s|Ft\\.\\s|ft\\.\\s|Feat|feat", "g");
 
   // this regex is used to remove feat, ft, etc... from the artist
-  const artist = regexResult?.[1]?.split(regSong)[0];
-  const songTitle = regexResult?.[2]?.split(regSong)[0]?.replaceAll('"', "");
+  const artist = regexResult?.[1]?.split(regSong)[0]?.trim();
+  const songTitle = regexResult?.[2]?.split(regSong)[0]?.replaceAll('"', "")?.trim();
 
   // if the regex is not matching, we only have the song title, which means the splitting failed
   const remainingAnswers = regexResult
@@ -26,7 +26,7 @@ export function BarreReponse({ YtVideo, socket }) {
         type: "title",
         title: { title: YtVideo?.title?.replaceAll(regSong, "")?.replaceAll('"', ""), found: false },
       };
-  if (import.meta.env.DEV) console.log(artist, songTitle, YtVideo?.title);
+  if (import.meta.env.DEV) console.log(artist, "|", songTitle, "|", YtVideo?.title);
 
   const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);

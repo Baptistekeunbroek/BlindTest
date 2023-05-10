@@ -43,6 +43,12 @@ const searchSong = async (query) => {
     const { videos } = await yts(query);
     const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
     const video = videos[0];
+    if (video?.description?.startsWith("Provided to YouTube by"))
+      return {
+        title: `${video.author.name} - ${video.title.replace(RemoveUselessStuffRegex, "")?.trim()}`,
+        videoId: video.videoId,
+        thumbnail: video.thumbnail,
+      };
     return {
       title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
       videoId: video.videoId,
