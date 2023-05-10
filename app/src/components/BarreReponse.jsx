@@ -5,6 +5,7 @@ import "./BarreReponse.css";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
+  // TODO : move all this logic to the server
   // this regex is used to split the title into artist and song title
   const regex = /^(.*?)\s*[-,:]\s*(.*?)\s*(\b feat\b.*)?\s*(\b ft\b.*)?\s*(\bFt\b.*)?\s*(\b Feat\b.*)?$/;
   const regexResult = YtVideo?.title?.match(regex);
