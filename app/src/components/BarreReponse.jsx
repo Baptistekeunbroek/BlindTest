@@ -5,13 +5,17 @@ import "./BarreReponse.css";
 import "./popupAnimation.css";
 
 export function BarreReponse({ YtVideo, socket }) {
+  // this regex is used to split the title into artist and song title
   const regex = /^(.*?)\s*[-,:]\s*(.*?)\s*(\b feat\b.*)?\s*(\b ft\b.*)?\s*(\bFt\b.*)?\s*(\b Feat\b.*)?$/;
   const regexResult = YtVideo?.title?.match(regex);
-  const regSong = RegExp("[:'&,]\\s|Ft\\.|Feat\\.\\s", "g");
+  // this regex is used to remove feat, ft, etc... from the song title
+  const regSong = RegExp("[:&,]\\s|Ft\\.|Feat\\.\\s", "g");
 
-  const artist = regexResult?.[1]?.split(", ")[0];
-  const songTitle = regexResult?.[2]?.replaceAll("'", "");
+  // this regex is used to remove feat, ft, etc... from the artist
+  const artist = regexResult?.[1]?.split(regSong)[0];
+  const songTitle = regexResult?.[2]?.split(regSong)[0]?.replaceAll('"', "");
 
+  // if the regex is not matching, we only have the song title, which means the splitting failed
   const remainingAnswers = regexResult
     ? {
         type: "artistAndSongTitle",
@@ -20,25 +24,26 @@ export function BarreReponse({ YtVideo, socket }) {
       }
     : {
         type: "title",
-        title: { title: YtVideo?.title?.replaceAll(regSong, ""), found: false },
+        title: { title: YtVideo?.title?.replaceAll(regSong, "")?.replaceAll('"', ""), found: false },
       };
+  if (import.meta.env.DEV) console.log(artist, songTitle, YtVideo?.title);
 
-  console.log(artist, songTitle, regexResult, YtVideo?.title, remainingAnswers);
-
-  const [reponse, setReponse] = useState(null);
   const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);
 
   const timerRef = React.useRef(null);
 
   function enterPress(event) {
+    if (["PAUSED", "STOPPED"].includes(timerRef.current?.getTimerState())) return;
+    if (!event.target.value) return;
     if (event.key === "Enter") {
+      const reponse = event.target.value?.trim();
       if (!regexResult) testSimilarite(stringSimilarity(YtVideo?.title, reponse), "title");
       else {
         testSimilarite(stringSimilarity(artist, reponse), "artist");
         testSimilarite(stringSimilarity(songTitle, reponse), "songTitle");
       }
-      setReponse(null);
+      event.target.value = "";
     }
   }
   const testSimilarite = (similarite, type) => {
@@ -59,19 +64,19 @@ export function BarreReponse({ YtVideo, socket }) {
         );
         break;
       case similarite >= 0.8 && similarite <= 0.9:
-        setPresOuPas("Très proche... Recommence, tu y es presque");
+        setPresOuPas((prev) => ({ ...prev, [type]: "Très proche... Recommence, tu y es presque" }));
         break;
       case similarite >= 0.5 && similarite <= 0.8:
-        setPresOuPas("Proche...");
+        setPresOuPas((prev) => ({ ...prev, [type]: "Pas mal, mais pas assez" }));
         break;
       case similarite < 0.5 && similarite !== 0:
-        setPresOuPas("Pas du tout ca !!!");
+        setPresOuPas((prev) => ({ ...prev, [type]: "Pas du tout" }));
         break;
       case similarite === 0:
-        setPresOuPas(null);
+        setPresOuPas((prev) => ({ ...prev, [type]: null }));
         break;
       default:
-        setPresOuPas(null);
+        setPresOuPas((prev) => ({ ...prev, [type]: null }));
         break;
     }
   };
@@ -100,16 +105,10 @@ export function BarreReponse({ YtVideo, socket }) {
       </div>
       <div className="containerBarre">
         <div className="webflow-style-input">
-          <input
-            value={reponse || ""}
-            className="inputBarre"
-            placeholder="Tenter une réponse..."
-            type="text"
-            onKeyDown={(e) => enterPress(e)}
-            onChange={(event) => setReponse(event.target.value)}
-          />
+          <input className="inputBarre" placeholder="Tenter une réponse..." type="text" onKeyDown={(e) => enterPress(e)} />
         </div>
       </div>
+      {remainingAnswers?.type && <div className="songType">{remainingAnswers.type === "artistAndSongTitle" ? "Artiste + Titre" : "Titre uniquement"}</div>}
       {/* eslint-disable-next-line react/no-unknown-property */}
       <p className="goodAnswer presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
         {presOuPas?.title} {presOuPas?.artist} {presOuPas?.songTitle}

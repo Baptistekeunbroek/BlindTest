@@ -62,7 +62,17 @@
   width: 100%;
   justify-content: center;
   color: #2979ff;
-  font-size: 48px;
+  font-size: 30px;
   font-family: "Signika", sans-serif;
+  padding-bottom: 10px;
+}
+
+.songType {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 13px;
+  font-family: "Signika", sans-serif;
+  padding-top: 10px;
   padding-bottom: 10px;
 }

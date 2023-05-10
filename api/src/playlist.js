@@ -7,10 +7,12 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
     playlist[room] = {};
     if (id.startsWith("https://open.spotify.com/playlist/")) {
       id = id.split("/playlist/")[1];
+      id = id.split("?")[0];
       const data = await searchPlaylist(id);
       if (!data.ok) return { error: data.error };
       playlist[room].tracks = data.data;
       playlist[room].source = "Spotify";
+      return;
     }
     const regex = /(?<=list=)(.*?)(?=&|$)/;
     id = id?.match(regex)?.[0] || id;
@@ -61,7 +63,7 @@ const getNextSong = async (room) => {
     return playlist[room].tracks.splice(randIndex, 1)[0];
   } else if (playlist[room].source === "Spotify") {
     const currentSong = playlist[room].tracks[randIndex];
-    const song = await searchSong(`${currentSong.artist} ${currentSong.name}`);
+    const song = await searchSong(`${currentSong.artist} ${currentSong.name} audio`);
     if (!song) return null;
     // return the song and remove it from the playlist
     playlist[room].tracks.splice(randIndex, 1)[0];
