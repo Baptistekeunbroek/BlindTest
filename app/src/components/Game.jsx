@@ -10,7 +10,7 @@ import { Messages } from "./Messages";
 import { Historique } from "./HistoriqueMusiques";
 import { StartGame } from "./StartGame";
 
-const ENDPOINT = "localhost:5000/"; //     'localhost:5000'    'https://blindtestbackend.herokuapp.com/'
+const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
 let socket = null;
 
