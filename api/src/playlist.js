@@ -18,13 +18,8 @@ async function setPlaylist(id = "PLq8u60UdCtaVPz2Cw0ML1zi1bgF6xenr2", room) {
     id = id?.match(regex)?.[0] || id;
 
     const list = await yts({ listId: id });
-    const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
 
-    const videos = list?.videos?.map((video) => ({
-      title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
-      videoId: video.videoId,
-      thumbnail: video.thumbnail,
-    }));
+    const videos = list?.videos?.map((video) => formatSong(video));
     playlist[room].tracks = videos;
     playlist[room].source = "Youtube";
     return;
@@ -41,19 +36,8 @@ function between(min, max) {
 const searchSong = async (query) => {
   try {
     const { videos } = await yts(query);
-    const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
-    const video = videos[0];
-    if (video?.description?.startsWith("Provided to YouTube by"))
-      return {
-        title: `${video.author.name} - ${video.title.replace(RemoveUselessStuffRegex, "")?.trim()}`,
-        videoId: video.videoId,
-        thumbnail: video.thumbnail,
-      };
-    return {
-      title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
-      videoId: video.videoId,
-      thumbnail: video.thumbnail,
-    };
+    const video = videos.find((video) => video.description.startsWith("Provided to YouTube by")) || videos[0];
+    return formatSong(video);
   } catch (error) {
     console.log(error);
     return null;
@@ -75,6 +59,23 @@ const getNextSong = async (room) => {
     playlist[room].tracks.splice(randIndex, 1)[0];
     return song;
   }
+};
+
+const formatSong = (video) => {
+  const RemoveUselessStuffRegex = /[\[\(].*?[\]\)]/g;
+
+  if (video?.description?.startsWith("Provided to YouTube by")) {
+    return {
+      title: `${video.author.name} - ${video.title.replace(RemoveUselessStuffRegex, "")?.trim()}`,
+      videoId: video.videoId,
+      thumbnail: video.thumbnail,
+    };
+  }
+  return {
+    title: video.title.replace(RemoveUselessStuffRegex, "")?.trim(),
+    videoId: video.videoId,
+    thumbnail: video.thumbnail,
+  };
 };
 
 module.exports = { setPlaylist, getNextSong };
