@@ -13,4 +13,4 @@ app.use(express.json());
 
 const server = http.createServer(app);
 connectToIoServer(server);
-server.listen(process.env.PORT || 5000, () => console.log("server has started on port : 5000"));
+server.listen(process.env.PORT || 5000, () => console.log("server has started on port : " + process.env.PORT || 5000));
