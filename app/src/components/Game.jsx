@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
-import "./Game.css";
 import { Music } from "./Music";
 import { ConnectedUsers } from "./ConnectedUsers";
 import { BarreReponse } from "./BarreReponse";
@@ -9,6 +8,7 @@ import { Input } from "./Input";
 import { Messages } from "./Messages";
 import { Historique } from "./HistoriqueMusiques";
 import { StartGame } from "./StartGame";
+import vengaicon from "../assets/icons/vengaicon.jpeg";
 
 const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
@@ -56,14 +56,29 @@ export function Game() {
     if (message) socket.emit("sendMessage", message, () => setMessage(null));
   }
 
-  if (!socket && !users) return <div>Chargement...</div>;
+  if (!socket && !users) return <div className="text-white">Chargement...</div>;
 
   return (
-    <div className="outerContainer">
-      <div className="JeuHomePage">
+    <div>
+       <nav className="p-3 border-gray-700 bg-[#242531]">
+        <div className="container flex flex-wrap items-center justify-center mx-auto">
+          <div className="flex flex-row justify-center items-center">
+            <img
+              src={vengaicon}
+              className="h-6 mr-3 sm:h-10 "
+              alt="Venga Logo"
+            />
+            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+              VengaGAMES
+            </span>
+          </div>
+        </div>
+      </nav>
+    <div className="flex flex-row justify-center h-max align-baseline">
+      <div className="flex flex-row">
         <ConnectedUsers users={users} />
-        <div className="BarreRepHisto">
-          <div className="partieGauche">
+        <div>
+          <div>
             {YtVideo ? (
               <>
                 <BarreReponse YtVideo={YtVideo} socket={socket} />
@@ -76,10 +91,15 @@ export function Game() {
           <Historique liste={musicHistory} />
         </div>
       </div>
-      <div className="rightContainer">
+      <div className="bg-[#242531] flex flex-col justify-end rounded-md h-max mt-2 ml-10">
+
         <InfoBar room={user?.room} />
         <Messages messages={messages} name={user?.name} />
         <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+      </div>
+    </div>
+    <div className="fixed bottom-0 flex justify-center w-full bg-[#242531]">
+        <h3 className="text-white">Vengaboys © - 2023</h3>
       </div>
     </div>
   );
