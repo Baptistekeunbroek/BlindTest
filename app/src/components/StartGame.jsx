@@ -18,8 +18,8 @@ export function StartGame({ socket, user }) {
       <h1 className="text-white font-semibold">Bienvenue sur le Blindtest</h1>
       {user?.admin ? (
         <>
-          <p className="text-white mt-2">Mettre une playlist personnelle (copiez le lien de la playlist)</p>
-          <p className="text-white">Non obligatoire, laisser vide pour lancer avec la playlist par défaut</p>
+          <p className="text-white mt-2 mr-2 ml-2">Mettre une playlist personnelle (copiez le lien de la playlist)</p>
+          <p className="text-white mr-2 ml-2">Non obligatoire, laisser vide pour lancer avec la playlist par défaut</p>
           <input className="bg-[#242531] !ring-0 !outline-none rounded-3xl text-white w-96 h-12 shadow-md shadow-[#00FECC] mt-6 font-semibold" placeholder="https://www.youtube.com/playlist?list=jkzah..." ref={playlistRef} />
           <button className="mt-4 bg-[#FDFDFD] rounded-3xl text-center flex flex-row justify-center items-center mb-2 w-36 font-semibold" onClick={start}>
             Commencer la partie

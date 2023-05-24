@@ -1,5 +1,3 @@
-import "./Music.css";
-
 export function Music({ YTurl, socket }) {
   function pret() {
     socket.emit("readyToPlay");
@@ -8,7 +6,7 @@ export function Music({ YTurl, socket }) {
   if (!YTurl) return null;
 
   return (
-    <div className="Music">
+    <div className="flex flex-col justify-center items-center opacity-0">
       <iframe
         onLoad={pret}
         className="iframe"

@@ -4,7 +4,7 @@ export function ConnectedUsers({ users }) {
   return (
     <div className="w-56 justify-center items-center text-center">
       {users ? (
-        <div className="bg-[#242531] rounded-lg mt-2 justify-center items-center ml-2">
+        <div className="bg-[#242531] rounded-lg mt-2 justify-start items-center ">
           <h1 className="mr-2 ml-2 mt-2 text-white font-semibold">Personnes connectées:</h1>
 
           <div className="justify-center items-center text-center">

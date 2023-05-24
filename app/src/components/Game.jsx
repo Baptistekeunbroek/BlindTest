@@ -16,7 +16,10 @@ let socket = null;
 
 export function Game() {
   const query = new URLSearchParams(window.location.search);
-  const [user, setUser] = useState({ name: query.get("name"), room: query.get("room") });
+  const [user, setUser] = useState({
+    name: query.get("name"),
+    room: query.get("room"),
+  });
   const [message, setMessage] = useState(null);
   const [messages, setMessages] = useState([]);
   const [YtVideo, setYtVideo] = useState(null);
@@ -29,9 +32,13 @@ export function Game() {
       upgrade: false,
     });
 
-    socket.emit("join", { name: query.get("name"), room: query.get("room") }, (user) => {
-      setUser(user);
-    });
+    socket.emit(
+      "join",
+      { name: query.get("name"), room: query.get("room") },
+      (user) => {
+        setUser(user);
+      }
+    );
 
     socket.on("roomData", ({ users, musicHistory }) => {
       setUsers(users);
@@ -59,8 +66,8 @@ export function Game() {
   if (!socket && !users) return <div className="text-white">Chargement...</div>;
 
   return (
-    <div>
-       <nav className="p-3 border-gray-700 bg-[#242531]">
+    <div className="h-full">
+      <nav className="p-3 border-gray-700 bg-[#242531]">
         <div className="container flex flex-wrap items-center justify-center mx-auto">
           <div className="flex flex-row justify-center items-center">
             <img
@@ -74,33 +81,36 @@ export function Game() {
           </div>
         </div>
       </nav>
-    <div className="flex flex-row justify-center h-max align-baseline">
-      <div className="flex flex-row">
-        <ConnectedUsers users={users} />
-        <div>
-          <div>
-            {YtVideo ? (
-              <>
-                <BarreReponse YtVideo={YtVideo} socket={socket} />
-                <Music YTurl={YtVideo?.URL} socket={socket} />
-              </>
-            ) : (
-              <StartGame socket={socket} user={user} />
-            )}
-          </div>
-          <Historique liste={musicHistory} />
+      <div className="flex flex-row justify-center h-full">
+        <div className="flex flex-row justify-between">
+          
+          <ConnectedUsers users={users} />
+    
+          
+            <div className="ml-10">
+              {YtVideo ? (
+                <>
+                  <BarreReponse YtVideo={YtVideo} socket={socket} />
+                  <Music YTurl={YtVideo?.URL} socket={socket} />
+                </>
+              ) : (
+                <StartGame socket={socket} user={user} />
+              )}
+            
+            <Historique liste={musicHistory} />
+            </div>
+        </div>
+        <div className="bg-[#242531] flex flex-col justify-end rounded-md h-full mt-2 ml-5">
+          <InfoBar room={user?.room} />
+          <Messages messages={messages} name={user?.name} />
+          <Input
+            message={message}
+            setMessage={setMessage}
+            sendMessage={sendMessage}
+          />
         </div>
       </div>
-      <div className="bg-[#242531] flex flex-col justify-end rounded-md h-max mt-2 ml-10">
-
-        <InfoBar room={user?.room} />
-        <Messages messages={messages} name={user?.name} />
-        <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-      </div>
-    </div>
-    <div className="fixed bottom-0 flex justify-center w-full bg-[#242531]">
-        <h3 className="text-white">Vengaboys © - 2023</h3>
-      </div>
+      
     </div>
   );
 }
