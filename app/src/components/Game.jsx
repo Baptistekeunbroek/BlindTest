@@ -66,7 +66,7 @@ export function Game() {
           <div className="partieGauche">
             {YtVideo ? (
               <>
-                <BarreReponse YtVideo={YtVideo} socket={socket} />
+                <BarreReponse video={YtVideo} socket={socket} />
                 <Music YTurl={YtVideo?.URL} socket={socket} />
               </>
             ) : (

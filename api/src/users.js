@@ -10,7 +10,7 @@ function addUser({ id, name, room }) {
   const firstUser = users.find((user) => user.room === room);
   const admin = !firstUser;
 
-  const user = { id, name, room, admin, score: 0, goodAnswer: { artist: false, songTitle: false, title: false } };
+  const user = { id, name, room, admin, score: 0, goodAnswer: { artist: false, song: false, title: false } };
   users.push(user);
 
   return { user };

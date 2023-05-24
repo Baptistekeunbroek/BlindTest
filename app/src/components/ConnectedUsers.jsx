@@ -12,13 +12,10 @@ export function ConnectedUsers({ users }) {
             <div className="listePers">
               {users.map((user) => {
                 const { goodAnswer } = user;
-                const allGood = goodAnswer.type === "title" ? goodAnswer.title?.found : goodAnswer.artist?.found && goodAnswer.songTitle?.found;
-
+                const allGood = goodAnswer.title ? goodAnswer.title === true : goodAnswer.artist === true && goodAnswer.song === true;
                 return (
                   <div key={user.id} style={{ color: allGood ? "green" : "black" }} className="user">
-                    {`${user.admin ? "👑" : ""} ${user.name} ${user.goodAnswer?.artist?.found ? "🎙" : ""}${user.goodAnswer?.songTitle?.found ? "💿" : ""}  ${
-                      user.score ? `${user.score} pts` : ""
-                    }`.trim()}
+                    {`${user.admin ? "👑" : ""} ${user.name} ${goodAnswer?.artist ? "🎙" : ""}${goodAnswer?.song ? "💿" : ""}  ${user.score ? `${user.score} pts` : ""}`.trim()}
                   </div>
                 );
               })}
