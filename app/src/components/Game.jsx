@@ -63,7 +63,7 @@ export function Game() {
 
   return (
     <div className="h-full">
-      <nav className="p-3 border-gray-700 bg-[#242531]">
+      <nav className="p-3 h-[10vh] border-gray-700 bg-[#242531]">
         <div className="container flex flex-wrap items-center justify-center mx-auto">
           <div className="flex flex-row justify-center items-center">
             <img src={vengaicon} className="h-6 mr-3 sm:h-10 " alt="Venga Logo" />
@@ -71,24 +71,23 @@ export function Game() {
           </div>
         </div>
       </nav>
-      <div className="flex flex-row justify-center h-full">
-        <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between h-[90vh]">
+        <div className="flex flex-col justify-start items-center">
           <ConnectedUsers users={users} />
-
-          <div className="ml-10">
-            {YtVideo ? (
-              <>
-                <BarreReponse video={YtVideo} socket={socket} />
-                <Music YTurl={YtVideo?.URL} socket={socket} />
-              </>
-            ) : (
-              <StartGame socket={socket} user={user} />
-            )}
-
-            <Historique liste={musicHistory} />
-          </div>
+          <Historique liste={musicHistory} />
         </div>
-        <div className="bg-[#242531] flex flex-col justify-end rounded-md h-full mt-2 ml-5">
+
+        <div className="">
+          {YtVideo ? (
+            <>
+              <BarreReponse video={YtVideo} socket={socket} />
+              <Music YTurl={YtVideo?.URL} socket={socket} />
+            </>
+          ) : (
+            <StartGame socket={socket} user={user} />
+          )}
+        </div>
+        <div className="bg-[#242531] flex flex-col justify-end rounded-md h-full max-w-[25%]">
           <InfoBar room={user?.room} />
           <Messages messages={messages} name={user?.name} />
           <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />

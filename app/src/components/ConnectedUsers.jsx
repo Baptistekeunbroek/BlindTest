@@ -10,7 +10,7 @@ export function ConnectedUsers({ users }) {
             const { goodAnswer } = user;
             const allGood = goodAnswer.title ? goodAnswer.title === true : goodAnswer.artist === true && goodAnswer.song === true;
             return (
-              <div key={user.id} style={{ color: allGood ? "green" : "black" }} className="justify-center items-center">
+              <div key={user.id} style={{ color: allGood ? "green" : "white" }} className="justify-center  items-center">
                 {`${user.admin ? "👑" : ""} ${user.name} ${goodAnswer?.artist ? "🎙" : ""}${goodAnswer?.song ? "💿" : ""}  ${user.score ? `${user.score} pts` : ""}`.trim()}
               </div>
             );
