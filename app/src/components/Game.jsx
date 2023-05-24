@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { Music } from "./Music";
 import { ConnectedUsers } from "./ConnectedUsers";
@@ -9,6 +9,7 @@ import { Messages } from "./Messages";
 import { Historique } from "./HistoriqueMusiques";
 import { StartGame } from "./StartGame";
 import vengaicon from "../assets/icons/vengaicon.jpeg";
+import { useNavigate } from "react-router";
 
 const ENDPOINT = import.meta.env.VITE_BACKEND_ENDPOINT;
 
@@ -16,11 +17,12 @@ let socket = null;
 
 export function Game() {
   const query = new URLSearchParams(window.location.search);
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     name: query.get("name"),
     room: query.get("room"),
   });
-  const [message, setMessage] = useState(null);
+  const message = useRef(null);
   const [messages, setMessages] = useState([]);
   const [YtVideo, setYtVideo] = useState(null);
   const [users, setUsers] = useState(null);
@@ -56,7 +58,7 @@ export function Game() {
 
   function sendMessage(event) {
     event.preventDefault();
-    if (message) socket.emit("sendMessage", message, () => setMessage(null));
+    if (message.current.value) socket.emit("sendMessage", message.current.value, () => (message.current.value = ""));
   }
 
   if (!socket && !users) return <div className="text-white">Chargement...</div>;
@@ -65,14 +67,14 @@ export function Game() {
     <div className="h-full">
       <nav className="p-3 h-[10vh] border-gray-700 bg-[#242531]">
         <div className="container flex flex-wrap items-center justify-center mx-auto">
-          <div className="flex flex-row justify-center items-center">
+          <div className="flex flex-row justify-center items-center cursor-pointer" onClick={() => navigate("/")}>
             <img src={vengaicon} className="h-6 mr-3 sm:h-10 " alt="Venga Logo" />
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">VengaGAMES</span>
           </div>
         </div>
       </nav>
       <div className="flex flex-row justify-between h-[90vh]">
-        <div className="flex flex-col justify-start items-center">
+        <div className="flex flex-col justify-start items-center max-w-[25%]">
           <ConnectedUsers users={users} />
           <Historique liste={musicHistory} />
         </div>
@@ -90,7 +92,7 @@ export function Game() {
         <div className="bg-[#242531] flex flex-col justify-end rounded-md h-full max-w-[25%]">
           <InfoBar room={user?.room} />
           <Messages messages={messages} name={user?.name} />
-          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+          <Input message={message} sendMessage={sendMessage} />
         </div>
       </div>
     </div>
