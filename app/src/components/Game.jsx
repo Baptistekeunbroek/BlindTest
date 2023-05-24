@@ -32,13 +32,9 @@ export function Game() {
       upgrade: false,
     });
 
-    socket.emit(
-      "join",
-      { name: query.get("name"), room: query.get("room") },
-      (user) => {
-        setUser(user);
-      }
-    );
+    socket.emit("join", { name: query.get("name"), room: query.get("room") }, (user) => {
+      setUser(user);
+    });
 
     socket.on("roomData", ({ users, musicHistory }) => {
       setUsers(users);
@@ -70,47 +66,34 @@ export function Game() {
       <nav className="p-3 border-gray-700 bg-[#242531]">
         <div className="container flex flex-wrap items-center justify-center mx-auto">
           <div className="flex flex-row justify-center items-center">
-            <img
-              src={vengaicon}
-              className="h-6 mr-3 sm:h-10 "
-              alt="Venga Logo"
-            />
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              VengaGAMES
-            </span>
+            <img src={vengaicon} className="h-6 mr-3 sm:h-10 " alt="Venga Logo" />
+            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">VengaGAMES</span>
           </div>
         </div>
       </nav>
       <div className="flex flex-row justify-center h-full">
         <div className="flex flex-row justify-between">
-          
           <ConnectedUsers users={users} />
-    
-          
-            <div className="ml-10">
-              {YtVideo ? (
-                <>
-                  <BarreReponse YtVideo={YtVideo} socket={socket} />
-                  <Music YTurl={YtVideo?.URL} socket={socket} />
-                </>
-              ) : (
-                <StartGame socket={socket} user={user} />
-              )}
-            
+
+          <div className="ml-10">
+            {YtVideo ? (
+              <>
+                <BarreReponse video={YtVideo} socket={socket} />
+                <Music YTurl={YtVideo?.URL} socket={socket} />
+              </>
+            ) : (
+              <StartGame socket={socket} user={user} />
+            )}
+
             <Historique liste={musicHistory} />
-            </div>
+          </div>
         </div>
         <div className="bg-[#242531] flex flex-col justify-end rounded-md h-full mt-2 ml-5">
           <InfoBar room={user?.room} />
           <Messages messages={messages} name={user?.name} />
-          <Input
-            message={message}
-            setMessage={setMessage}
-            sendMessage={sendMessage}
-          />
+          <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
         </div>
       </div>
-      
     </div>
   );
 }

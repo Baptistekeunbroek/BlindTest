@@ -1,33 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { stringSimilarity } from "string-similarity-js";
 import Timer from "@amplication/react-compound-timer";
 import "./BarreReponse.css";
 import "./popupAnimation.css";
 
-export function BarreReponse({ YtVideo, socket }) {
-  // TODO : move all this logic to the server
-  // this regex is used to split the title into artist and song title
-  const regex = /^(.*?)\s*[-,:]\s*(.*?)\s*(\b feat\b.*)?\s*(\b ft\b.*)?\s*(\bFt\b.*)?\s*(\b Feat\b.*)?$/;
-  const regexResult = YtVideo?.title?.match(regex);
-  // this regex is used to remove feat, ft, etc... from the song title
-  const regSong = RegExp("[:&,]\\s|Ft\\.\\s|ft\\.\\s|Feat|feat", "g");
-
-  // this regex is used to remove feat, ft, etc... from the artist
-  const artist = regexResult?.[1]?.split(regSong)[0]?.trim();
-  const songTitle = regexResult?.[2]?.split(regSong)[0]?.replaceAll('"', "")?.trim();
-
-  // if the regex is not matching, we only have the song title, which means the splitting failed
-  const remainingAnswers = regexResult
-    ? {
-        type: "artistAndSongTitle",
-        artist: { artist, found: false },
-        songTitle: { songTitle, found: false },
-      }
-    : {
-        type: "title",
-        title: { title: YtVideo?.title?.replaceAll(regSong, "")?.replaceAll('"', ""), found: false },
-      };
-  if (import.meta.env.DEV) console.log(artist, "|", songTitle, "|", YtVideo?.title);
+export function BarreReponse({ video, socket }) {
+  // in dev mode, log the artist and song title
+  if (import.meta.env.DEV) {
+    console.log("video: ", video);
+  }
 
   const [presOuPas, setPresOuPas] = useState(null);
   const [popup, setPopup] = useState(0);
@@ -38,55 +18,20 @@ export function BarreReponse({ YtVideo, socket }) {
     if (["PAUSED", "STOPPED"].includes(timerRef.current?.getTimerState())) return;
     if (!event.target.value) return;
     if (event.key === "Enter") {
-      const reponse = event.target.value?.trim();
-      if (!regexResult) testSimilarite(stringSimilarity(YtVideo?.title, reponse), "title");
-      else {
-        testSimilarite(stringSimilarity(artist, reponse), "artist");
-        testSimilarite(stringSimilarity(songTitle, reponse), "songTitle");
-      }
+      socket.emit("guessAnswer", event.target.value?.trim());
       event.target.value = "";
     }
   }
-  const testSimilarite = (similarite, type) => {
-    setPopup(1);
-    switch (true) {
-      case similarite >= 0.9:
-        if (remainingAnswers[type].found === true) return setPresOuPas((prev) => ({ ...prev, [type]: "Déjà trouvé !!!" }));
-        remainingAnswers[type].found = true;
-        socket.emit("goodAnswer", remainingAnswers);
-        setPresOuPas((prev) =>
-          type === "title"
-            ? { ...prev, title: "Bonne réponse, trop fort !!!" }
-            : type === "artist"
-            ? { ...prev, title: "Artiste trouvé, bien joué !!!" }
-            : type === "songTitle"
-            ? { ...prev, title: "Bonne chanson, bien joué !!!" }
-            : null
-        );
-        break;
-      case similarite >= 0.8 && similarite <= 0.9:
-        setPresOuPas((prev) => ({ ...prev, [type]: "Très proche... Recommence, tu y es presque" }));
-        break;
-      case similarite >= 0.5 && similarite <= 0.8:
-        setPresOuPas((prev) => ({ ...prev, [type]: "Pas mal, mais pas assez" }));
-        break;
-      case similarite < 0.5 && similarite !== 0:
-        setPresOuPas((prev) => ({ ...prev, [type]: "Pas du tout" }));
-        break;
-      case similarite === 0:
-        setPresOuPas((prev) => ({ ...prev, [type]: null }));
-        break;
-      default:
-        setPresOuPas((prev) => ({ ...prev, [type]: null }));
-        break;
-    }
-  };
 
   useEffect(() => {
     socket.on("timer30", () => {
       setPresOuPas(null);
       timerRef.current?.reset();
       timerRef.current?.start();
+    });
+    socket.on("goodAnswer", ({ message }) => {
+      setPresOuPas(message || "");
+      setPopup(1);
     });
   }, []);
 
@@ -109,10 +54,10 @@ export function BarreReponse({ YtVideo, socket }) {
           <input className="inputBarre" placeholder="Tenter une réponse..." type="text" onKeyDown={(e) => enterPress(e)} />
         </div>
       </div>
-      {remainingAnswers?.type && <div className="songType">{remainingAnswers.type === "artistAndSongTitle" ? "Artiste + Titre" : "Titre uniquement"}</div>}
+      {video?.type && <div className="songType">{video.type === "artistAndSong" ? "Artiste + Titre" : "Titre uniquement"}</div>}
       {/* eslint-disable-next-line react/no-unknown-property */}
       <p className="goodAnswer presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
-        {presOuPas?.title} {presOuPas?.artist} {presOuPas?.songTitle}
+        {presOuPas}
       </p>
     </div>
   );
