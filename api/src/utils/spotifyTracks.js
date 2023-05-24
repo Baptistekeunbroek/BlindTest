@@ -17,6 +17,7 @@ async function searchPlaylist(playlistId) {
       return {
         name: item.name,
         artist: item.artists[0].name,
+        id: item.id,
       };
     });
 

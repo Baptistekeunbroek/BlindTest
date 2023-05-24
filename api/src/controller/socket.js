@@ -1,7 +1,8 @@
 const { Server } = require("socket.io");
-const { addUser, removeUser, getUser, getUsersInRoom, updateUser } = require("./users");
-const { addMusique, getMusiques, clearRoom } = require("./musicHistory");
-const { getNextSong, setPlaylist } = require("./playlist");
+const { addUser, removeUser, getUser, getUsersInRoom, updateUser } = require("../users");
+const { addMusique, getMusiques, clearRoom, getCurrentSong } = require("../utils/musicHistory");
+const { getNextSong, setPlaylist } = require("../utils/playlist");
+const stringSimilarity = require("string-similarity");
 
 exports.connectToIoServer = (server) => {
   const io = new Server(server, {
@@ -77,37 +78,6 @@ exports.connectToIoServer = (server) => {
       callback();
     });
 
-    socket.on("goodAnswer", async (answers) => {
-      const user = getUser(socket.id);
-      let verify = false;
-      let users = null;
-      if (answers.type === "artistAndSongTitle") {
-        if (answers.artist.found === true && user.goodAnswer.artist === false) {
-          updateUser(user.id, "score", (user.score || 0) + 1);
-          updateUser(user.id, "goodAnswer", { artist: true, songTitle: user.goodAnswer.songTitle });
-        }
-        if (answers.songTitle.found === true && user.goodAnswer.songTitle === false) {
-          updateUser(user.id, "score", (user.score || 0) + 1);
-          updateUser(user.id, "goodAnswer", { artist: user.goodAnswer.artist, songTitle: true });
-        }
-        users = getUsersInRoom(user.room);
-        verify = users.every((user) => user.goodAnswer.artist === true && user.goodAnswer.songTitle === true);
-      } else {
-        updateUser(user.id, "score", (user.score || 0) + 1);
-        updateUser(user.id, "goodAnswer", { title: true });
-        users = getUsersInRoom(user.room);
-        verify = users.every((user) => user.goodAnswer.title === true);
-      }
-      io.to(user.room).emit("roomData", { users });
-
-      if (verify) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        resetVoteOfRoom(user.room);
-        io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
-        nextSong(user.room);
-      }
-    });
-
     socket.on("readyToPlay", () => {
       const user = getUser(socket.id);
       io.to(user.room).emit("timer30");
@@ -132,6 +102,51 @@ exports.connectToIoServer = (server) => {
       if (user.admin) {
         resetVoteOfRoom(user.room);
         const users = getUsersInRoom(user.room);
+        io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
+        nextSong(user.room);
+      }
+    });
+    socket.on("guessAnswer", async (guess) => {
+      const user = getUser(socket.id);
+      const currentSong = getCurrentSong(user.room);
+      if (!currentSong) return;
+      let users = null;
+      if (answers.type === "artistAndSongTitle") {
+        if (user.goodAnswer.artist === true && user.goodAnswer.songTitle === true) return socket.emit("goodAnswer", { message: "Vous avez déjà trouvé la réponse !" });
+        else if (user.goodAnswer.artist === false) {
+          const artistSimilarity = stringSimilarity.compareTwoStrings(guess, currentSong.artist);
+          if (artistSimilarity > 0.75) {
+            updateUser(user.id, "score", (user.score || 0) + 1);
+            updateUser(user.id, "goodAnswer", { artist: true, songTitle: user.goodAnswer.songTitle });
+            socket.emit("goodAnswer", { message: "Vous avez trouvé l'artiste !" });
+          }
+        } else if (user.goodAnswer.song === false) {
+          const songSimilarity = stringSimilarity.compareTwoStrings(guess, currentSong.song);
+          if (songSimilarity > 0.75) {
+            updateUser(user.id, "score", (user.score || 0) + 1);
+            updateUser(user.id, "goodAnswer", { song: true, songTitle: user.goodAnswer.songTitle });
+            socket.emit("goodAnswer", { message: "Vous avez trouvé le titre !" });
+          }
+        }
+
+        users = getUsersInRoom(user.room);
+        verify = users.every((user) => user.goodAnswer.artist === true && user.goodAnswer.songTitle === true);
+      } else {
+        if (user.goodAnswer.title === true) return socket.emit("goodAnswer", { message: "Vous avez déjà trouvé la réponse !" });
+        const titleSimilarity = stringSimilarity.compareTwoStrings(guess, currentSong.title);
+        if (titleSimilarity > 0.75) {
+          updateUser(user.id, "score", (user.score || 0) + 1);
+          updateUser(user.id, "goodAnswer", { title: true });
+          socket.emit("goodAnswer", { message: "Vous avez trouvé le titre !" });
+          users = getUsersInRoom(user.room);
+          verify = users.every((user) => user.goodAnswer.title === true);
+        }
+      }
+      io.to(user.room).emit("roomData", { users });
+
+      if (verify) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        resetVoteOfRoom(user.room);
         io.to(user.room).emit("roomData", { users, musicHistory: getMusiques(user.room) });
         nextSong(user.room);
       }

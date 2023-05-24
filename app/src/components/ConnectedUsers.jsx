@@ -16,7 +16,7 @@ export function ConnectedUsers({ users }) {
 
                 return (
                   <div key={user.id} style={{ color: allGood ? "green" : "black" }} className="user">
-                    {`${user.admin ? "👑" : ""} ${user.name} ${user.goodAnswer?.artist?.found ? "🎙" : ""}${user.goodAnswer?.songTitle?.found ? "💿" : ""}  ${
+                    {`${user.admin ? "👑" : ""} ${user.name} ${goodAnswer?.artist?.found ? "🎙" : ""}${goodAnswer?.songTitle?.found ? "💿" : ""}  ${
                       user.score ? `${user.score} pts` : ""
                     }`.trim()}
                   </div>
