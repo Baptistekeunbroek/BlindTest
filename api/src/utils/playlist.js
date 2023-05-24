@@ -53,14 +53,14 @@ const getNextSong = async (room) => {
 
   if (playlist[room].source === "Youtube") {
     // return the song and remove it from the playlist
-    const song = playlist[room].tracks[randIndex];
+    const song = playlist[room].tracks?.[randIndex];
     if (!song) return null;
-    playlist[room].tracks = playlist[room].tracks.filter((song) => song.videoId !== song.videoId);
+    playlist[room].tracks = playlist[room].tracks.filter((s) => s.videoId !== song.videoId);
 
     setCurrentSong({ room, song });
     return song;
   } else if (playlist[room].source === "Spotify") {
-    const currentSong = playlist[room].tracks[randIndex];
+    const currentSong = playlist[room].tracks?.[randIndex];
     const song = await searchSong(`${currentSong.artist} ${currentSong.name} audio`);
     if (!song) return null;
     // remove the song from the playlist
@@ -82,7 +82,7 @@ const formatSong = (video) => {
       artist: video.author.name,
       song: video.title,
       thumbnail: video.thumbnail,
-      type: "artistAndSongTitle", // this is used to know if we have to search for the artist and song title or only the title
+      type: "artistAndSong", // this is used to know if we have to search for the artist and song title or only the title
     };
   }
 
@@ -101,12 +101,12 @@ const formatSong = (video) => {
     };
 
   const artist = regexResult[0]?.split(regSong)[0]?.trim();
-  const songTitle = regexResult[1]?.split(regSong)[0]?.replaceAll('"', "")?.trim();
+  const song = regexResult[1]?.split(regSong)[0]?.replaceAll('"', "")?.trim();
 
   return {
-    type: "artistAndSongTitle",
+    type: "artistAndSong",
     artist: artist,
-    song: songTitle,
+    song: song,
     videoId: video.videoId,
     thumbnail: video.thumbnail,
   };

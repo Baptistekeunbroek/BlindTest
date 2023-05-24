@@ -7,11 +7,6 @@ export function BarreReponse({ video, socket }) {
   // in dev mode, log the artist and song title
   if (import.meta.env.DEV) {
     console.log("video: ", video);
-    // if (video.type === "artistAndSongTitle") {
-    //   console.log("artist: ", video.artist, "song: ", video.song);
-    // } else {
-    //   console.log("title: ", video.title);
-    // }
   }
 
   const [presOuPas, setPresOuPas] = useState(null);
@@ -59,7 +54,7 @@ export function BarreReponse({ video, socket }) {
           <input className="inputBarre" placeholder="Tenter une réponse..." type="text" onKeyDown={(e) => enterPress(e)} />
         </div>
       </div>
-      {video?.type && <div className="songType">{video.type === "artistAndSongTitle" ? "Artiste + Titre" : "Titre uniquement"}</div>}
+      {video?.type && <div className="songType">{video.type === "artistAndSong" ? "Artiste + Titre" : "Titre uniquement"}</div>}
       {/* eslint-disable-next-line react/no-unknown-property */}
       <p className="goodAnswer presOuPas" onAnimationEnd={() => setPopup(0)} popup={popup}>
         {presOuPas}
