@@ -38,7 +38,13 @@ function between(min, max) {
 const searchSong = async (query) => {
   try {
     const { videos } = await yts(query);
-    const video = videos.find((video) => video.description.startsWith("Provided to YouTube by")) || videos[0];
+    const video = videos.find((v) => v.description.startsWith("Provided to YouTube by")) || videos.find((v) => [" - "].includes(v.title)) || videos[0];
+    if (!video) return null;
+    if (video.description.startsWith("Provided to YouTube by")) {
+      // has to refind the song with the videoId in order to get the full description
+      const song = await yts({ videoId: video.videoId });
+      return formatSong(song);
+    }
     return formatSong(video);
   } catch (error) {
     console.log(error);
@@ -77,10 +83,14 @@ const formatSong = (video) => {
   video.title = video.title?.replace(removeUselessStuffRegex, "")?.trim();
 
   if (video?.description?.startsWith("Provided to YouTube by")) {
+    // the 3rd line of the description is : title · artist
+    const description = video.description.split("\n")[2];
+    const artist = description ? description.split(" · ")[1]?.trim() : video.author.name;
+    const song = description ? description.split(" · ")[0]?.trim() : video.title;
     return {
       videoId: video.videoId,
-      artist: video.author.name,
-      song: video.title,
+      artist: artist.replace(removeUselessStuffRegex, ""),
+      song: song.replace(removeUselessStuffRegex, ""),
       thumbnail: video.thumbnail,
       type: "artistAndSong", // this is used to know if we have to search for the artist and song title or only the title
     };
