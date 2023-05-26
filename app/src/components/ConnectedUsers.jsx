@@ -1,3 +1,6 @@
+import { FiMusic } from "react-icons/fi";
+import { RiAlbumLine } from "react-icons/ri";
+
 export function ConnectedUsers({ users }) {
   if (!users) return null;
 
@@ -11,7 +14,9 @@ export function ConnectedUsers({ users }) {
             const allGood = goodAnswer.title ? goodAnswer.title === true : goodAnswer.artist === true && goodAnswer.song === true;
             return (
               <div key={user.id} style={{ color: allGood ? "green" : "white" }} className="justify-center  items-center">
-                {`${user.admin ? "👑" : ""} ${user.name} ${goodAnswer?.artist ? "🎙" : ""}${goodAnswer?.song ? "💿" : ""}  ${user.score ? `${user.score} pts` : ""}`.trim()}
+                {`${user.admin ? "👑" : ""} ${user.name} ${goodAnswer?.artist ? <FiMusic /> : ""}${goodAnswer?.song ? <RiAlbumLine /> : ""}  ${
+                  user.score ? `${user.score} pts` : ""
+                }`.trim()}
               </div>
             );
           })}

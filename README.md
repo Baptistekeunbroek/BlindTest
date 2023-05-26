@@ -6,9 +6,9 @@ Testez le [ici](https://vengablindtest.onrender.com/)
 
 ## 🛠 Skills
 
-**Client:** React, CSS
+**Client:** React, Tailwind
 
-**Server:** Node, Express, socket.io
+**Server:** Node, socket.io
 
 ## Lancer le project en server local
 

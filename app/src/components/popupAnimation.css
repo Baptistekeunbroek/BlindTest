@@ -1,25 +1,13 @@
 .goodAnswer[popup="1"] {
-  animation: popup 0.7s;
+  animation: popup 1s ease-in-out;
 }
 
 @keyframes popup {
   0% {
-    transform: scale(1);
+    transform: scale(0);
   }
   50% {
-    transform: scale(1.4);
-  }
-  60% {
-    transform: scale(1.1);
-  }
-  70% {
     transform: scale(1.2);
-  }
-  80% {
-    transform: scale(1);
-  }
-  90% {
-    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
