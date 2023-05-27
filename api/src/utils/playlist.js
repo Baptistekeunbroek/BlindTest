@@ -99,7 +99,7 @@ const formatSong = (video) => {
   // this regex is used to split the title into artist and song title
   const regex = /[-:_,]\s/;
   // this regex is used to remove feat, ft, etc... from the song title
-  const regSong = RegExp("[:&,]\\s|Ft\\.\\s|ft\\.\\s|Feat|feat", "g");
+  const regSong = RegExp("[:&,]\\s|Ft\\.\\s|ft\\.\\s|Ft\\s|ft\\s|Feat|feat|\\s\\|\\s", "g");
 
   const regexResult = video?.title?.split(regex);
   if (regexResult?.length < 2)
@@ -111,7 +111,7 @@ const formatSong = (video) => {
     };
 
   const artist = regexResult[0]?.split(regSong)[0]?.trim();
-  const song = regexResult[1]?.split(regSong)[0]?.replaceAll('"', "")?.trim();
+  const song = regexResult[1]?.split(regSong)[0]?.replace(/"/g, "")?.trim();
 
   return {
     type: "artistAndSong",

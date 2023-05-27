@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { addUser, removeUser, getUser, getUsersInRoom, updateUser } = require("../users");
+const { addUser, removeUser, getUser, getUsersInRoom, updateUser } = require("../utils/users");
 const { addMusique, getMusiques, clearRoom, getCurrentSong } = require("../utils/musicHistory");
 const { getNextSong, setPlaylist } = require("../utils/playlist");
 const stringSimilarity = require("string-similarity");
